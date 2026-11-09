@@ -1,0 +1,481 @@
+{
+ "input_sha256": "ebf69b39d1caa24aecedd489620c4159f063b48a2192e106cb515d83db14b9e7",
+ "evaluated": "2026-11-07T15:57:13Z",
+ "policy": "direct <=52 options, 8192 tokens; block elimination above 52",
+ "caveat": "split from rebuilt data whose upstream rows were in the v1 training pool; not a blind test for v1",
+ "models": {
+  "v1": {
+   "n": 1555,
+   "groups": 1444,
+   "accuracy": 0.8405144694533762,
+   "macro_accuracy": 0.8474542341641272,
+   "nll": 0.49943811456021137,
+   "brier": 0.24134238511317993,
+   "by_task": {
+    "administration_route_choice": {
+     "n": 60,
+     "accuracy": 0.9166666666666666,
+     "correct": 55
+    },
+    "case_complication": {
+     "n": 60,
+     "accuracy": 0.85,
+     "correct": 51
+    },
+    "case_etiology": {
+     "n": 61,
+     "accuracy": 0.7868852459016393,
+     "correct": 48
+    },
+    "clinical_grade": {
+     "n": 60,
+     "accuracy": 0.8666666666666667,
+     "correct": 52
+    },
+    "consent_action": {
+     "n": 55,
+     "accuracy": 1.0,
+     "correct": 55
+    },
+    "diagnosis_choice": {
+     "n": 58,
+     "accuracy": 0.9310344827586207,
+     "correct": 54
+    },
+    "medical_exam_unmapped": {
+     "n": 64,
+     "accuracy": 0.75,
+     "correct": 48
+    },
+    "examination_choice": {
+     "n": 61,
+     "accuracy": 0.8360655737704918,
+     "correct": 51
+    },
+    "fluid_plan": {
+     "n": 60,
+     "accuracy": 0.7666666666666667,
+     "correct": 46
+    },
+    "followup_plan": {
+     "n": 59,
+     "accuracy": 0.9322033898305084,
+     "correct": 55
+    },
+    "treatment_choice": {
+     "n": 61,
+     "accuracy": 0.7049180327868853,
+     "correct": 43
+    },
+    "infection_precaution": {
+     "n": 60,
+     "accuracy": 0.8166666666666667,
+     "correct": 49
+    },
+    "medication_choice": {
+     "n": 60,
+     "accuracy": 0.7333333333333333,
+     "correct": 44
+    },
+    "message_urgency_pair": {
+     "n": 60,
+     "accuracy": 0.9833333333333333,
+     "correct": 59
+    },
+    "monitoring_target": {
+     "n": 59,
+     "accuracy": 0.8305084745762712,
+     "correct": 49
+    },
+    "nursing_priority": {
+     "n": 60,
+     "accuracy": 0.8166666666666667,
+     "correct": 49
+    },
+    "nutrition_plan": {
+     "n": 57,
+     "accuracy": 0.8596491228070176,
+     "correct": 49
+    },
+    "patient_contraindication": {
+     "n": 60,
+     "accuracy": 0.85,
+     "correct": 51
+    },
+    "patient_counseling": {
+     "n": 60,
+     "accuracy": 0.95,
+     "correct": 57
+    },
+    "pgx_guideline_recommendation": {
+     "n": 60,
+     "accuracy": 0.7333333333333333,
+     "correct": 44
+    },
+    "positioning_choice": {
+     "n": 60,
+     "accuracy": 0.7833333333333333,
+     "correct": 47
+    },
+    "prevention_choice": {
+     "n": 60,
+     "accuracy": 0.8166666666666667,
+     "correct": 49
+    },
+    "rehabilitation_choice": {
+     "n": 60,
+     "accuracy": 0.8666666666666667,
+     "correct": 52
+    },
+    "tcm_pathogenesis_candidate": {
+     "n": 60,
+     "accuracy": 0.7333333333333333,
+     "correct": 44
+    },
+    "tcm_syndrome": {
+     "n": 60,
+     "accuracy": 0.7666666666666667,
+     "correct": 46
+    },
+    "triage_urgency": {
+     "n": 2,
+     "accuracy": 1.0,
+     "correct": 2
+    },
+    "trial_referral": {
+     "n": 58,
+     "accuracy": 1.0,
+     "correct": 58
+    }
+   },
+   "reliability": [
+    {
+     "lower": 0.2,
+     "upper": 0.3,
+     "n": 4,
+     "confidence": 0.2794310301542282,
+     "accuracy": 0.25
+    },
+    {
+     "lower": 0.3,
+     "upper": 0.4,
+     "n": 21,
+     "confidence": 0.3494708367756435,
+     "accuracy": 0.42857142857142855
+    },
+    {
+     "lower": 0.4,
+     "upper": 0.5,
+     "n": 22,
+     "confidence": 0.4448803703893315,
+     "accuracy": 0.4090909090909091
+    },
+    {
+     "lower": 0.5,
+     "upper": 0.6,
+     "n": 55,
+     "confidence": 0.5534972180019725,
+     "accuracy": 0.36363636363636365
+    },
+    {
+     "lower": 0.6,
+     "upper": 0.7,
+     "n": 65,
+     "confidence": 0.649935034605173,
+     "accuracy": 0.36923076923076925
+    },
+    {
+     "lower": 0.7,
+     "upper": 0.8,
+     "n": 67,
+     "confidence": 0.7534979092541025,
+     "accuracy": 0.5223880597014925
+    },
+    {
+     "lower": 0.8,
+     "upper": 0.9,
+     "n": 149,
+     "confidence": 0.8594219720603635,
+     "accuracy": 0.6711409395973155
+    },
+    {
+     "lower": 0.9,
+     "upper": 1.0,
+     "n": 1172,
+     "confidence": 0.9485992869114306,
+     "accuracy": 0.9462457337883959
+    }
+   ],
+   "confidence_by_correctness": {
+    "true": 0.9181636885868837,
+    "false": 0.7305998432059442
+   },
+   "ece": 0.049871978748266335,
+   "correct": 1307,
+   "accuracy_95ci": [
+    0.8146279949558638,
+    0.862565445026178
+   ],
+   "flip_rate": 0.0,
+   "unsupported": 2,
+   "unsupported_by_task": {
+    "trial_referral": 2
+   },
+   "checkpoint": "work/releases/medical-jev-4b-v1.1.0/adapter.safetensors",
+   "views": 1,
+   "input": "work/data/release/test.jsonl",
+   "policy": {
+    "max_options": 52,
+    "max_tokens": 8192,
+    "tournament_above": 52,
+    "absent_option": false
+   },
+   "sealed_test": {
+    "evaluated": false,
+    "run_count": 0
+   }
+  },
+  "readout": {
+   "n": 1555,
+   "groups": 1444,
+   "accuracy": 0.754983922829582,
+   "macro_accuracy": 0.7646744888430823,
+   "nll": 0.6660676852860524,
+   "brier": 0.3326225857629189,
+   "by_task": {
+    "administration_route_choice": {
+     "n": 60,
+     "accuracy": 0.9166666666666666,
+     "correct": 55
+    },
+    "case_complication": {
+     "n": 60,
+     "accuracy": 0.7166666666666667,
+     "correct": 43
+    },
+    "case_etiology": {
+     "n": 61,
+     "accuracy": 0.7540983606557377,
+     "correct": 46
+    },
+    "clinical_grade": {
+     "n": 60,
+     "accuracy": 0.5333333333333333,
+     "correct": 32
+    },
+    "consent_action": {
+     "n": 55,
+     "accuracy": 0.8727272727272727,
+     "correct": 48
+    },
+    "diagnosis_choice": {
+     "n": 58,
+     "accuracy": 0.8103448275862069,
+     "correct": 47
+    },
+    "medical_exam_unmapped": {
+     "n": 64,
+     "accuracy": 0.734375,
+     "correct": 47
+    },
+    "examination_choice": {
+     "n": 61,
+     "accuracy": 0.7213114754098361,
+     "correct": 44
+    },
+    "fluid_plan": {
+     "n": 60,
+     "accuracy": 0.6333333333333333,
+     "correct": 38
+    },
+    "followup_plan": {
+     "n": 59,
+     "accuracy": 0.8813559322033898,
+     "correct": 52
+    },
+    "treatment_choice": {
+     "n": 61,
+     "accuracy": 0.6557377049180327,
+     "correct": 40
+    },
+    "infection_precaution": {
+     "n": 60,
+     "accuracy": 0.65,
+     "correct": 39
+    },
+    "medication_choice": {
+     "n": 60,
+     "accuracy": 0.7,
+     "correct": 42
+    },
+    "message_urgency_pair": {
+     "n": 60,
+     "accuracy": 0.9333333333333333,
+     "correct": 56
+    },
+    "monitoring_target": {
+     "n": 59,
+     "accuracy": 0.7288135593220338,
+     "correct": 43
+    },
+    "nursing_priority": {
+     "n": 60,
+     "accuracy": 0.7333333333333333,
+     "correct": 44
+    },
+    "nutrition_plan": {
+     "n": 57,
+     "accuracy": 0.7719298245614035,
+     "correct": 44
+    },
+    "patient_contraindication": {
+     "n": 60,
+     "accuracy": 0.75,
+     "correct": 45
+    },
+    "patient_counseling": {
+     "n": 60,
+     "accuracy": 0.7833333333333333,
+     "correct": 47
+    },
+    "pgx_guideline_recommendation": {
+     "n": 60,
+     "accuracy": 0.7,
+     "correct": 42
+    },
+    "positioning_choice": {
+     "n": 60,
+     "accuracy": 0.7166666666666667,
+     "correct": 43
+    },
+    "prevention_choice": {
+     "n": 60,
+     "accuracy": 0.6833333333333333,
+     "correct": 41
+    },
+    "rehabilitation_choice": {
+     "n": 60,
+     "accuracy": 0.7166666666666667,
+     "correct": 43
+    },
+    "tcm_pathogenesis_candidate": {
+     "n": 60,
+     "accuracy": 0.75,
+     "correct": 45
+    },
+    "tcm_syndrome": {
+     "n": 60,
+     "accuracy": 0.8333333333333334,
+     "correct": 50
+    },
+    "triage_urgency": {
+     "n": 2,
+     "accuracy": 1.0,
+     "correct": 2
+    },
+    "trial_referral": {
+     "n": 58,
+     "accuracy": 0.9655172413793104,
+     "correct": 56
+    }
+   },
+   "reliability": [
+    {
+     "lower": 0.2,
+     "upper": 0.3,
+     "n": 8,
+     "confidence": 0.2797861881554127,
+     "accuracy": 0.375
+    },
+    {
+     "lower": 0.3,
+     "upper": 0.4,
+     "n": 87,
+     "confidence": 0.3583598822012715,
+     "accuracy": 0.2988505747126437
+    },
+    {
+     "lower": 0.4,
+     "upper": 0.5,
+     "n": 126,
+     "confidence": 0.4500077951049048,
+     "accuracy": 0.3968253968253968
+    },
+    {
+     "lower": 0.5,
+     "upper": 0.6,
+     "n": 129,
+     "confidence": 0.5520511001579521,
+     "accuracy": 0.4496124031007752
+    },
+    {
+     "lower": 0.6,
+     "upper": 0.7,
+     "n": 124,
+     "confidence": 0.6486093959500713,
+     "accuracy": 0.532258064516129
+    },
+    {
+     "lower": 0.7,
+     "upper": 0.8,
+     "n": 139,
+     "confidence": 0.7477400500139744,
+     "accuracy": 0.7194244604316546
+    },
+    {
+     "lower": 0.8,
+     "upper": 0.9,
+     "n": 205,
+     "confidence": 0.851472640328291,
+     "accuracy": 0.8048780487804879
+    },
+    {
+     "lower": 0.9,
+     "upper": 1.0,
+     "n": 737,
+     "confidence": 0.975656030944762,
+     "accuracy": 0.9579375848032564
+    }
+   ],
+   "confidence_by_correctness": {
+    "true": 0.8628770514078806,
+    "false": 0.5939300082174186
+   },
+   "ece": 0.04297647104385965,
+   "correct": 1174,
+   "accuracy_95ci": [
+    0.7272727272727273,
+    0.7787839586028461
+   ],
+   "flip_rate": 0.0,
+   "unsupported": 2,
+   "unsupported_by_task": {
+    "trial_referral": 2
+   },
+   "checkpoint": "readout",
+   "views": 1,
+   "input": "work/data/release/test.jsonl",
+   "policy": {
+    "max_options": 52,
+    "max_tokens": 8192,
+    "tournament_above": 52,
+    "absent_option": false
+   },
+   "sealed_test": {
+    "evaluated": false,
+    "run_count": 0
+   }
+  }
+ },
+ "v1_vs_readout": {
+  "accuracy_delta": 0.08553054662379421,
+  "group_bootstrap_95ci": [
+   0.06527415143603134,
+   0.10420711974110032
+  ],
+  "groups": 1444,
+  "wrong_to_right": 198,
+  "right_to_wrong": 65,
+  "repair_rate": 0.5196850393700787
+ }
+}

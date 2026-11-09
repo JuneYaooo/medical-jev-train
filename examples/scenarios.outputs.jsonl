@@ -1,0 +1,6 @@
+{"id": "teaching_diagnosis", "status": "ok", "answer": "influenza_a", "probabilities": {"influenza_a": 0.9658398628234863, "covid19": 0.01728018745779991, "insufficient_evidence": 0.016879891976714134}}
+{"id": "nursing_priority", "status": "ok", "answer": "pressure_relief", "probabilities": {"pressure_relief": 0.9589323401451111, "health_education": 0.020533762872219086, "routine_documentation": 0.020533762872219086}}
+{"id": "medication_contraindication", "status": "ok", "answer": "plan_a", "probabilities": {"plan_a": 0.9603496193885803, "plan_b": 0.02121688611805439, "plan_c": 0.018433552235364914}}
+{"id": "followup_plan", "status": "ok", "answer": "scheduled_review", "probabilities": {"scheduled_review": 0.9639783501625061, "delay_one_month": 0.017518479377031326, "cancel_followup": 0.018503203988075256}}
+{"id": "trial_referral", "status": "ok", "answer": "screening_match", "probabilities": {"screening_match": 0.9602945446968079, "screening_mismatch": 0.019775180146098137, "need_more_information": 0.01993027701973915}}
+{"id": "message_classification", "status": "ok", "answer": "routine", "probabilities": {"routine": 0.9643948078155518, "clinical_review": 0.017663506790995598, "emergency": 0.017941666767001152}}

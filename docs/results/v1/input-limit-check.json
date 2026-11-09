@@ -1,0 +1,54 @@
+{
+  "adapter_sha256": "88c64b00d23201118a9b7b4bad192aba6a5fcb5de4e65f00542529554425b4b6",
+  "inference": {
+    "max_options": 52,
+    "max_tokens": 8192
+  },
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "device": "NVIDIA GeForce RTX 5090"
+  },
+  "synthetic_long_input_checks": [
+    {
+      "tokens": 2040,
+      "target_tokens": 2048,
+      "status": "ok",
+      "prediction": "blue",
+      "correct": true,
+      "seconds": 0.10900793969631195,
+      "peak_gpu_gib": 8.313876152038574
+    },
+    {
+      "tokens": 4092,
+      "target_tokens": 4096,
+      "status": "ok",
+      "prediction": "blue",
+      "correct": true,
+      "seconds": 0.2258337400853634,
+      "peak_gpu_gib": 8.571792125701904
+    },
+    {
+      "tokens": 8187,
+      "target_tokens": 8192,
+      "status": "ok",
+      "prediction": "blue",
+      "correct": true,
+      "seconds": 0.4888725019991398,
+      "peak_gpu_gib": 9.087073802947998
+    }
+  ],
+  "candidate_boundary": {
+    "options": 52,
+    "status": "ok",
+    "probability_sum": 1.0000000158324838,
+    "answer": "51"
+  },
+  "benchmark": {
+    "n": 1514,
+    "supported": 1414,
+    "unsupported": 100,
+    "max_supported_tokens_observed": 1747
+  },
+  "scenario_outputs_exact_match": true,
+  "long_input_interpretation": "Synthetic label lookup, batch size 1; not a medical accuracy test."
+}

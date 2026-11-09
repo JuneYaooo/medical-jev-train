@@ -1,0 +1,1 @@
+{"id":"format-example","request":{"state":{"clinical_question":"演示病例记录体温 37.0°C。仅按题设规则：体温达到或超过 38.0°C 标记为高温，否则标记为未达阈值。"},"questions":{"decision":{"type":"choice","instructions":"依据给定记录与阈值，选择唯一匹配的标签。","criteria":{"below_threshold":"未达阈值","at_or_above_threshold":"达到或超过阈值"}}}}}

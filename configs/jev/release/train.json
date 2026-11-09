@@ -1,0 +1,66 @@
+{
+  "_note": "从公开数据集复现当前版本（v1.1.0）的训练配方：hf download --repo-type dataset JuneYao/medical-jev-4b-data --local-dir work/data/release。数据为重建版本，与 v1 训练池来源相同但不逐条相同。",
+  "model": {
+    "model_path": "${paths.work}/models/Qwen3.5-4B",
+    "device": "cuda",
+    "dtype": "fp16",
+    "attn_implementation": "sdpa",
+    "max_tokens": 1536,
+    "max_options": 26,
+    "gradient_checkpointing": true,
+    "pass_position_ids": false,
+    "lora": {
+      "layers": "all",
+      "rank": 16,
+      "alpha": 32,
+      "dropout": 0.05,
+      "targets": null
+    }
+  },
+  "optim": {
+    "lr": 0.0001,
+    "epochs": 2,
+    "batch_size": 8,
+    "grad_accum": 2,
+    "warmup_ratio": 0.03,
+    "scheduler": "cosine",
+    "min_lr_ratio": 0.1,
+    "weight_decay": 0.0,
+    "clip": 1.0
+  },
+  "eval_every": 500,
+  "eval_views": 1,
+  "save_every": 200,
+  "log_every": 20,
+  "seed": 17,
+  "data": {
+    "train": [
+      {
+        "path": "${paths.work}/data/release/train.jsonl",
+        "exclude_tasks": [
+          "medical_exam_unmapped"
+        ],
+        "per_task_max": 3000,
+        "seed": 17
+      },
+      {
+        "path": "${paths.work}/data/release/train.jsonl",
+        "tasks": [
+          "medical_exam_unmapped"
+        ],
+        "max_rows": 10000,
+        "seed": 17
+      }
+    ],
+    "development": "${paths.work}/data/release/development.jsonl"
+  },
+  "objective": {
+    "label_smoothing": 0.05,
+    "hard_tasks": []
+  },
+  "tensorboard": true,
+  "paths_file": "../paths.example.json",
+  "tournament": {
+    "above": 52
+  }
+}

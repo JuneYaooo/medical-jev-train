@@ -1,0 +1,298 @@
+{
+  "benchmark_n": 1514,
+  "source_hashes_verified": {
+    "packets.jsonl": "a6c5252d2968545ac61bc6d0f0c3f13370ab99e3b52cff3f7b479d6cb78c1423",
+    "lineage.jsonl": "0c5a073cbcfd433abd294877dc0ce93f08e4ae564155baa48844d862af5c3b5e",
+    "jev-1.13.0/quality.jsonl.gz": "a4638271a2bb2cb48d0d31d13ecab8d9be4deba57b67f078c0800059394be253"
+  },
+  "question_materials_options_gold_match": true,
+  "mode": "single-view single-forward choice scoring; JEV archived native multi-question Choice",
+  "inference": {
+    "max_options": 52,
+    "max_tokens": 8192
+  },
+  "full": {
+    "n": 1514,
+    "trained_correct": 1028,
+    "base_correct": 907,
+    "jev_correct": 1073,
+    "trained_vs_base": {
+      "accuracy_delta": 0.07992073976221929,
+      "group_bootstrap_95ci": [
+        0.05452127659574468,
+        0.10409889394925179
+      ],
+      "groups": 1288,
+      "wrong_to_right": 254,
+      "right_to_wrong": 133,
+      "repair_rate": 0.4184514003294893
+    },
+    "trained_vs_jev": {
+      "accuracy_delta": -0.029722589167767502,
+      "group_bootstrap_95ci": [
+        -0.05351170568561873,
+        -0.006
+      ],
+      "groups": 1288,
+      "wrong_to_right": 153,
+      "right_to_wrong": 198,
+      "repair_rate": 0.3469387755102041
+    }
+  },
+  "supported": {
+    "n": 1414,
+    "trained_correct": 1028,
+    "base_correct": 907,
+    "jev_correct": 1045,
+    "trained_vs_base": {
+      "accuracy_delta": 0.08557284299858557,
+      "group_bootstrap_95ci": [
+        0.0605854322668482,
+        0.11471861471861472
+      ],
+      "groups": 1188,
+      "wrong_to_right": 254,
+      "right_to_wrong": 133,
+      "repair_rate": 0.5009861932938856
+    },
+    "trained_vs_jev": {
+      "accuracy_delta": -0.012022630834512023,
+      "group_bootstrap_95ci": [
+        -0.037037037037037035,
+        0.01272984441301273
+      ],
+      "groups": 1188,
+      "wrong_to_right": 153,
+      "right_to_wrong": 170,
+      "repair_rate": 0.4146341463414634
+    }
+  },
+  "unsupported": {
+    "n": 100,
+    "reasons": {
+      "148 options exceed max_options 52": 100
+    }
+  },
+  "tasks": [
+    {
+      "task": "administration_route_choice",
+      "n": 4,
+      "trained_correct": 4,
+      "base_correct": 2,
+      "jev_correct": 4,
+      "unsupported": 0
+    },
+    {
+      "task": "case_complication",
+      "n": 100,
+      "trained_correct": 86,
+      "base_correct": 77,
+      "jev_correct": 90,
+      "unsupported": 0
+    },
+    {
+      "task": "case_etiology",
+      "n": 100,
+      "trained_correct": 85,
+      "base_correct": 80,
+      "jev_correct": 80,
+      "unsupported": 0
+    },
+    {
+      "task": "clinical_grade",
+      "n": 100,
+      "trained_correct": 54,
+      "base_correct": 42,
+      "jev_correct": 53,
+      "unsupported": 0
+    },
+    {
+      "task": "consent_action",
+      "n": 3,
+      "trained_correct": 2,
+      "base_correct": 2,
+      "jev_correct": 3,
+      "unsupported": 0
+    },
+    {
+      "task": "diagnosis",
+      "n": 200,
+      "trained_correct": 150,
+      "base_correct": 137,
+      "jev_correct": 157,
+      "unsupported": 0
+    },
+    {
+      "task": "examination_choice",
+      "n": 100,
+      "trained_correct": 86,
+      "base_correct": 81,
+      "jev_correct": 86,
+      "unsupported": 0
+    },
+    {
+      "task": "fluid_plan",
+      "n": 16,
+      "trained_correct": 10,
+      "base_correct": 5,
+      "jev_correct": 10,
+      "unsupported": 0
+    },
+    {
+      "task": "followup_plan",
+      "n": 6,
+      "trained_correct": 6,
+      "base_correct": 5,
+      "jev_correct": 5,
+      "unsupported": 0
+    },
+    {
+      "task": "infection_precaution",
+      "n": 5,
+      "trained_correct": 5,
+      "base_correct": 4,
+      "jev_correct": 5,
+      "unsupported": 0
+    },
+    {
+      "task": "medication_choice",
+      "n": 100,
+      "trained_correct": 82,
+      "base_correct": 67,
+      "jev_correct": 83,
+      "unsupported": 0
+    },
+    {
+      "task": "message_urgency_pair",
+      "n": 30,
+      "trained_correct": 21,
+      "base_correct": 23,
+      "jev_correct": 20,
+      "unsupported": 0
+    },
+    {
+      "task": "monitoring_target",
+      "n": 5,
+      "trained_correct": 4,
+      "base_correct": 4,
+      "jev_correct": 4,
+      "unsupported": 0
+    },
+    {
+      "task": "nursing_priority",
+      "n": 42,
+      "trained_correct": 36,
+      "base_correct": 32,
+      "jev_correct": 37,
+      "unsupported": 0
+    },
+    {
+      "task": "nutrition_plan",
+      "n": 11,
+      "trained_correct": 7,
+      "base_correct": 7,
+      "jev_correct": 7,
+      "unsupported": 0
+    },
+    {
+      "task": "patient_contraindication",
+      "n": 54,
+      "trained_correct": 43,
+      "base_correct": 36,
+      "jev_correct": 42,
+      "unsupported": 0
+    },
+    {
+      "task": "patient_counseling",
+      "n": 11,
+      "trained_correct": 9,
+      "base_correct": 9,
+      "jev_correct": 10,
+      "unsupported": 0
+    },
+    {
+      "task": "pgx_guideline_recommendation",
+      "n": 100,
+      "trained_correct": 60,
+      "base_correct": 39,
+      "jev_correct": 56,
+      "unsupported": 0
+    },
+    {
+      "task": "positioning_choice",
+      "n": 10,
+      "trained_correct": 6,
+      "base_correct": 5,
+      "jev_correct": 10,
+      "unsupported": 0
+    },
+    {
+      "task": "prevention_choice",
+      "n": 13,
+      "trained_correct": 12,
+      "base_correct": 7,
+      "jev_correct": 10,
+      "unsupported": 0
+    },
+    {
+      "task": "rehabilitation_choice",
+      "n": 4,
+      "trained_correct": 3,
+      "base_correct": 2,
+      "jev_correct": 4,
+      "unsupported": 0
+    },
+    {
+      "task": "tcm_pathogenesis_candidate",
+      "n": 100,
+      "trained_correct": 77,
+      "base_correct": 64,
+      "jev_correct": 71,
+      "unsupported": 0
+    },
+    {
+      "task": "tcm_syndrome",
+      "n": 100,
+      "trained_correct": 0,
+      "base_correct": 0,
+      "jev_correct": 28,
+      "unsupported": 100
+    },
+    {
+      "task": "treatment_choice",
+      "n": 100,
+      "trained_correct": 77,
+      "base_correct": 67,
+      "jev_correct": 78,
+      "unsupported": 0
+    },
+    {
+      "task": "triage_urgency",
+      "n": 100,
+      "trained_correct": 40,
+      "base_correct": 55,
+      "jev_correct": 66,
+      "unsupported": 0
+    },
+    {
+      "task": "trial_referral",
+      "n": 100,
+      "trained_correct": 63,
+      "base_correct": 55,
+      "jev_correct": 54,
+      "unsupported": 0
+    }
+  ],
+  "standardized_summary": "summary.json",
+  "calibration": {
+    "method": "uncalibrated",
+    "ece": 0.1199157003002423,
+    "denominator": 1414,
+    "bins": 10
+  },
+  "sealed_test": {
+    "evaluated": false,
+    "run_count": 0
+  },
+  "checkpoint_sha256": "88c64b00d23201118a9b7b4bad192aba6a5fcb5de4e65f00542529554425b4b6"
+}

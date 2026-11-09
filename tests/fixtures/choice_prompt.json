@@ -1,0 +1,44 @@
+[
+  {
+    "request": {
+      "state": {
+        "clinical_question": "中文, punctuation \" and newline\n"
+      },
+      "questions": {
+        "decision": {
+          "instructions": "choose",
+          "criteria": {
+            "yes": "yes",
+            "no": "no"
+          }
+        }
+      }
+    },
+    "prompt": "[[[{\"role\": \"system\", \"content\": \"根据材料、题设规则和候选含义选择唯一最佳答案。只输出选项字母，不解释。\"}, {\"role\": \"user\", \"content\": \"{\\\"任务\\\":\\\"choose\\\",\\\"材料\\\":{\\\"clinical_question\\\":\\\"中文, punctuation \\\\\\\" and newline\\\\n\\\"},\\\"选项\\\":{\\\"A\\\":\\\"yes\\\",\\\"B\\\":\\\"no\\\"}}\"}]], {\"tokenize\": false, \"add_generation_prompt\": true, \"enable_thinking\": false}]",
+    "keys": [
+      "yes",
+      "no"
+    ]
+  },
+  {
+    "request": {
+      "state": {
+        "clinical_question": "中文, punctuation \" and newline\n"
+      },
+      "questions": {
+        "decision": {
+          "instructions": "choose",
+          "criteria": {
+            "no": "no",
+            "yes": "yes"
+          }
+        }
+      }
+    },
+    "prompt": "[[[{\"role\": \"system\", \"content\": \"根据材料、题设规则和候选含义选择唯一最佳答案。只输出选项字母，不解释。\"}, {\"role\": \"user\", \"content\": \"{\\\"任务\\\":\\\"choose\\\",\\\"材料\\\":{\\\"clinical_question\\\":\\\"中文, punctuation \\\\\\\" and newline\\\\n\\\"},\\\"选项\\\":{\\\"A\\\":\\\"no\\\",\\\"B\\\":\\\"yes\\\"}}\"}]], {\"tokenize\": false, \"add_generation_prompt\": true, \"enable_thinking\": false}]",
+    "keys": [
+      "no",
+      "yes"
+    ]
+  }
+]

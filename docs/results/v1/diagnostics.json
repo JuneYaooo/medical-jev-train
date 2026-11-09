@@ -1,0 +1,627 @@
+{
+  "triage": {
+    "train": {
+      "n": 1710,
+      "labels": {
+        "0A_NO_ESCALATION_INFO_NEEDED": 283,
+        "0B_NO_ESCALATION_SELF_CARE_MONITOR": 459,
+        "1B_ESCALATION_URGENT_CARE": 357,
+        "1A_ESCALATION_NONURGENT_CARE": 610,
+        "A": 1
+      },
+      "source_labels": {
+        "meddg": {
+          "0A_NO_ESCALATION_INFO_NEEDED": 91,
+          "1B_ESCALATION_URGENT_CARE": 24,
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 21
+        },
+        "unspecified": {
+          "0A_NO_ESCALATION_INFO_NEEDED": 192,
+          "1B_ESCALATION_URGENT_CARE": 192,
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 192,
+          "1A_ESCALATION_NONURGENT_CARE": 192
+        },
+        "kamed": {
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 158,
+          "1B_ESCALATION_URGENT_CARE": 80,
+          "1A_ESCALATION_NONURGENT_CARE": 35
+        },
+        "medpt": {
+          "1A_ESCALATION_NONURGENT_CARE": 290,
+          "1B_ESCALATION_URGENT_CARE": 7
+        },
+        "reis84668": {
+          "1A_ESCALATION_NONURGENT_CARE": 87
+        },
+        "imcs21": {
+          "1B_ESCALATION_URGENT_CARE": 14,
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 16
+        },
+        "pmr_reddit": {
+          "1B_ESCALATION_URGENT_CARE": 33,
+          "1A_ESCALATION_NONURGENT_CARE": 3,
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 2
+        },
+        "coviddialog_ch": {
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 67,
+          "1B_ESCALATION_URGENT_CARE": 4,
+          "1A_ESCALATION_NONURGENT_CARE": 1
+        },
+        "reviewed_source_grounded_construction": {
+          "1A_ESCALATION_NONURGENT_CARE": 2,
+          "1B_ESCALATION_URGENT_CARE": 3,
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 3
+        },
+        "perumedqa": {
+          "A": 1
+        }
+      },
+      "construction": {
+        "source_doctor_reply_current_clarification_action_mapping": 91,
+        "unspecified": 776,
+        "source_doctor_reply_current_action_mapping": 420,
+        "source_professional_answer_current_action_mapping": 297,
+        "source_annotation_definition_equivalent_subset": 87,
+        "source_physician_reply_current_action_mapping": 38,
+        "original_source_exam_answer": 1
+      },
+      "request_characters": {
+        "min": 490,
+        "median": 1262,
+        "p95": 2018,
+        "max": 4489
+      }
+    },
+    "pool": {
+      "n": 1710,
+      "labels": {
+        "1B_ESCALATION_URGENT_CARE": 357,
+        "1A_ESCALATION_NONURGENT_CARE": 610,
+        "0B_NO_ESCALATION_SELF_CARE_MONITOR": 459,
+        "0A_NO_ESCALATION_INFO_NEEDED": 283,
+        "A": 1
+      },
+      "source_labels": {
+        "pmr_reddit": {
+          "1B_ESCALATION_URGENT_CARE": 33,
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 2,
+          "1A_ESCALATION_NONURGENT_CARE": 3
+        },
+        "reis84668": {
+          "1A_ESCALATION_NONURGENT_CARE": 87
+        },
+        "kamed": {
+          "1A_ESCALATION_NONURGENT_CARE": 35,
+          "1B_ESCALATION_URGENT_CARE": 80,
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 158
+        },
+        "imcs21": {
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 16,
+          "1B_ESCALATION_URGENT_CARE": 14
+        },
+        "medpt": {
+          "1A_ESCALATION_NONURGENT_CARE": 290,
+          "1B_ESCALATION_URGENT_CARE": 7
+        },
+        "coviddialog_ch": {
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 67,
+          "1A_ESCALATION_NONURGENT_CARE": 1,
+          "1B_ESCALATION_URGENT_CARE": 4
+        },
+        "reviewed_source_grounded_construction": {
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 3,
+          "1B_ESCALATION_URGENT_CARE": 3,
+          "1A_ESCALATION_NONURGENT_CARE": 2
+        },
+        "meddg": {
+          "0A_NO_ESCALATION_INFO_NEEDED": 91,
+          "1B_ESCALATION_URGENT_CARE": 24,
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 21
+        },
+        "unspecified": {
+          "0A_NO_ESCALATION_INFO_NEEDED": 192,
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 192,
+          "1A_ESCALATION_NONURGENT_CARE": 192,
+          "1B_ESCALATION_URGENT_CARE": 192
+        },
+        "perumedqa": {
+          "A": 1
+        }
+      },
+      "construction": {
+        "source_physician_reply_current_action_mapping": 38,
+        "source_annotation_definition_equivalent_subset": 87,
+        "source_doctor_reply_current_action_mapping": 420,
+        "source_professional_answer_current_action_mapping": 297,
+        "unspecified": 776,
+        "source_doctor_reply_current_clarification_action_mapping": 91,
+        "original_source_exam_answer": 1
+      },
+      "request_characters": {
+        "min": 490,
+        "median": 1262,
+        "p95": 2018,
+        "max": 4489
+      }
+    },
+    "development": {
+      "n": 279,
+      "labels": {
+        "0B_NO_ESCALATION_SELF_CARE_MONITOR": 73,
+        "1B_ESCALATION_URGENT_CARE": 67,
+        "1A_ESCALATION_NONURGENT_CARE": 74,
+        "0A_NO_ESCALATION_INFO_NEEDED": 65
+      },
+      "source_labels": {
+        "coviddialog_ch": {
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 2
+        },
+        "kamed": {
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 6,
+          "1B_ESCALATION_URGENT_CARE": 2,
+          "1A_ESCALATION_NONURGENT_CARE": 2
+        },
+        "medpt": {
+          "1A_ESCALATION_NONURGENT_CARE": 7
+        },
+        "reis84668": {
+          "1A_ESCALATION_NONURGENT_CARE": 1
+        },
+        "meddg": {
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 1,
+          "0A_NO_ESCALATION_INFO_NEEDED": 1
+        },
+        "pmr_reddit": {
+          "1B_ESCALATION_URGENT_CARE": 1
+        },
+        "unspecified": {
+          "0A_NO_ESCALATION_INFO_NEEDED": 64,
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 64,
+          "1A_ESCALATION_NONURGENT_CARE": 64,
+          "1B_ESCALATION_URGENT_CARE": 64
+        }
+      },
+      "construction": {
+        "source_doctor_reply_current_action_mapping": 13,
+        "source_professional_answer_current_action_mapping": 7,
+        "source_annotation_definition_equivalent_subset": 1,
+        "source_doctor_reply_current_clarification_action_mapping": 1,
+        "source_physician_reply_current_action_mapping": 1,
+        "unspecified": 256
+      },
+      "request_characters": {
+        "min": 617,
+        "median": 1070,
+        "p95": 1084,
+        "max": 2090
+      }
+    },
+    "benchmark": {
+      "n": 100,
+      "labels": {
+        "1A_ESCALATION_NONURGENT_CARE": 30,
+        "1B_ESCALATION_URGENT_CARE": 20,
+        "0A_NO_ESCALATION_INFO_NEEDED": 30,
+        "0B_NO_ESCALATION_SELF_CARE_MONITOR": 20
+      },
+      "source_labels": {
+        "unspecified": {
+          "1A_ESCALATION_NONURGENT_CARE": 30,
+          "1B_ESCALATION_URGENT_CARE": 20,
+          "0A_NO_ESCALATION_INFO_NEEDED": 30,
+          "0B_NO_ESCALATION_SELF_CARE_MONITOR": 20
+        }
+      },
+      "construction": {
+        "unspecified": 100
+      },
+      "request_characters": {
+        "min": 434,
+        "median": 664,
+        "p95": 885,
+        "max": 956
+      }
+    }
+  },
+  "selection": {
+    "old_best": {
+      "step": 5500,
+      "accuracy": 0.8285857071464268,
+      "macro_accuracy": 0.8060709110581065,
+      "nll": 0.5338412190644782,
+      "correct": 1658,
+      "n": 2001
+    },
+    "macro_best": {
+      "step": 5500,
+      "accuracy": 0.8285857071464268,
+      "macro_accuracy": 0.8060709110581065,
+      "nll": 0.5338412190644782,
+      "correct": 1658,
+      "n": 2001
+    },
+    "evaluated_checkpoints": 13
+  },
+  "development_exclusions": {
+    "n": 102,
+    "by_reason": {
+      "options": 47,
+      "length": 55
+    },
+    "by_task": {
+      "tcm_syndrome": 47,
+      "trial_referral": 55
+    }
+  },
+  "calibration": {
+    "development": {
+      "n": 2001,
+      "groups": 1358,
+      "accuracy": 0.8380809595202399,
+      "macro_accuracy": 0.8168088003765914,
+      "nll": 0.4907800698882146,
+      "brier": 0.23815112842662944,
+      "by_task": {
+        "administration_route_choice": {
+          "n": 60,
+          "accuracy": 0.9
+        },
+        "case_complication": {
+          "n": 62,
+          "accuracy": 0.8548387096774194
+        },
+        "case_etiology": {
+          "n": 60,
+          "accuracy": 0.7666666666666667
+        },
+        "clinical_grade": {
+          "n": 61,
+          "accuracy": 0.8852459016393442
+        },
+        "consent_action": {
+          "n": 58,
+          "accuracy": 0.9310344827586207
+        },
+        "patient_counseling": {
+          "n": 61,
+          "accuracy": 0.819672131147541
+        },
+        "diagnosis_choice": {
+          "n": 63,
+          "accuracy": 0.7142857142857143
+        },
+        "examination_choice": {
+          "n": 57,
+          "accuracy": 0.8070175438596491
+        },
+        "fluid_plan": {
+          "n": 60,
+          "accuracy": 0.65
+        },
+        "followup_plan": {
+          "n": 61,
+          "accuracy": 0.819672131147541
+        },
+        "infection_precaution": {
+          "n": 59,
+          "accuracy": 0.847457627118644
+        },
+        "medical_exam_unmapped": {
+          "n": 60,
+          "accuracy": 0.7166666666666667
+        },
+        "medication_choice": {
+          "n": 60,
+          "accuracy": 0.8666666666666667
+        },
+        "message_urgency_pair": {
+          "n": 316,
+          "accuracy": 0.9683544303797469
+        },
+        "monitoring_target": {
+          "n": 56,
+          "accuracy": 0.7678571428571429
+        },
+        "prevention_choice": {
+          "n": 60,
+          "accuracy": 0.75
+        },
+        "nutrition_plan": {
+          "n": 61,
+          "accuracy": 0.7213114754098361
+        },
+        "nursing_priority": {
+          "n": 60,
+          "accuracy": 0.8166666666666667
+        },
+        "patient_contraindication": {
+          "n": 60,
+          "accuracy": 0.7666666666666667
+        },
+        "treatment_choice": {
+          "n": 59,
+          "accuracy": 0.8305084745762712
+        },
+        "pgx_guideline_recommendation": {
+          "n": 68,
+          "accuracy": 0.8970588235294118
+        },
+        "positioning_choice": {
+          "n": 60,
+          "accuracy": 0.6
+        },
+        "rehabilitation_choice": {
+          "n": 62,
+          "accuracy": 0.7580645161290323
+        },
+        "tcm_pathogenesis_candidate": {
+          "n": 60,
+          "accuracy": 0.8666666666666667
+        },
+        "tcm_syndrome": {
+          "n": 13,
+          "accuracy": 0.8461538461538461
+        },
+        "triage_urgency": {
+          "n": 279,
+          "accuracy": 0.8853046594982079
+        },
+        "trial_referral": {
+          "n": 5,
+          "accuracy": 1.0
+        }
+      },
+      "reliability": [
+        {
+          "lower": 0.2,
+          "upper": 0.3,
+          "n": 6,
+          "confidence": 0.28609340172261,
+          "accuracy": 0.5
+        },
+        {
+          "lower": 0.3,
+          "upper": 0.4,
+          "n": 36,
+          "confidence": 0.35265396494004464,
+          "accuracy": 0.3055555555555556
+        },
+        {
+          "lower": 0.4,
+          "upper": 0.5,
+          "n": 62,
+          "confidence": 0.4541379596827732,
+          "accuracy": 0.2903225806451613
+        },
+        {
+          "lower": 0.5,
+          "upper": 0.6,
+          "n": 91,
+          "confidence": 0.5431369082582603,
+          "accuracy": 0.4725274725274725
+        },
+        {
+          "lower": 0.6,
+          "upper": 0.7,
+          "n": 84,
+          "confidence": 0.6504498194156598,
+          "accuracy": 0.5595238095238095
+        },
+        {
+          "lower": 0.7,
+          "upper": 0.8,
+          "n": 94,
+          "confidence": 0.748054649053366,
+          "accuracy": 0.5425531914893617
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "n": 148,
+          "confidence": 0.8608586044797489,
+          "accuracy": 0.6824324324324325
+        },
+        {
+          "lower": 0.9,
+          "upper": 1.0,
+          "n": 1480,
+          "confidence": 0.9530146783737986,
+          "accuracy": 0.947972972972973
+        }
+      ],
+      "confidence_by_correctness": {
+        "true": 0.9126275351373403,
+        "false": 0.6924119079408884
+      },
+      "ece": 0.0401722707533714
+    },
+    "development_benchmark": {
+      "n": 1414,
+      "groups": 1188,
+      "accuracy": 0.727015558698727,
+      "macro_accuracy": 0.7604895460664692,
+      "nll": 0.9266664419030245,
+      "brier": 0.43422449658553247,
+      "by_task": {
+        "clinical_grade": {
+          "n": 100,
+          "accuracy": 0.54
+        },
+        "trial_referral": {
+          "n": 100,
+          "accuracy": 0.63
+        },
+        "patient_contraindication": {
+          "n": 54,
+          "accuracy": 0.7962962962962963
+        },
+        "triage_urgency": {
+          "n": 100,
+          "accuracy": 0.4
+        },
+        "synthetic_diagnosis": {
+          "n": 100,
+          "accuracy": 0.61
+        },
+        "diagnosis_choice": {
+          "n": 100,
+          "accuracy": 0.89
+        },
+        "examination_choice": {
+          "n": 100,
+          "accuracy": 0.86
+        },
+        "treatment_choice": {
+          "n": 100,
+          "accuracy": 0.77
+        },
+        "medication_choice": {
+          "n": 100,
+          "accuracy": 0.82
+        },
+        "message_urgency_pair": {
+          "n": 30,
+          "accuracy": 0.7
+        },
+        "case_etiology": {
+          "n": 100,
+          "accuracy": 0.85
+        },
+        "case_complication": {
+          "n": 100,
+          "accuracy": 0.86
+        },
+        "nursing_priority": {
+          "n": 42,
+          "accuracy": 0.8571428571428571
+        },
+        "fluid_plan": {
+          "n": 16,
+          "accuracy": 0.625
+        },
+        "pgx_guideline_recommendation": {
+          "n": 100,
+          "accuracy": 0.6
+        },
+        "tcm_pathogenesis_candidate": {
+          "n": 100,
+          "accuracy": 0.77
+        },
+        "nutrition_plan": {
+          "n": 11,
+          "accuracy": 0.6363636363636364
+        },
+        "positioning_choice": {
+          "n": 10,
+          "accuracy": 0.6
+        },
+        "followup_plan": {
+          "n": 6,
+          "accuracy": 1.0
+        },
+        "monitoring_target": {
+          "n": 5,
+          "accuracy": 0.8
+        },
+        "rehabilitation_choice": {
+          "n": 4,
+          "accuracy": 0.75
+        },
+        "prevention_choice": {
+          "n": 13,
+          "accuracy": 0.9230769230769231
+        },
+        "infection_precaution": {
+          "n": 5,
+          "accuracy": 1.0
+        },
+        "patient_counseling": {
+          "n": 11,
+          "accuracy": 0.8181818181818182
+        },
+        "administration_route_choice": {
+          "n": 4,
+          "accuracy": 1.0
+        },
+        "consent_action": {
+          "n": 3,
+          "accuracy": 0.6666666666666666
+        }
+      },
+      "reliability": [
+        {
+          "lower": 0.1,
+          "upper": 0.2,
+          "n": 1,
+          "confidence": 0.14932380616664886,
+          "accuracy": 0.0
+        },
+        {
+          "lower": 0.2,
+          "upper": 0.3,
+          "n": 12,
+          "confidence": 0.26851242904861766,
+          "accuracy": 0.16666666666666666
+        },
+        {
+          "lower": 0.3,
+          "upper": 0.4,
+          "n": 22,
+          "confidence": 0.3595722724090923,
+          "accuracy": 0.2727272727272727
+        },
+        {
+          "lower": 0.4,
+          "upper": 0.5,
+          "n": 36,
+          "confidence": 0.44530677050352097,
+          "accuracy": 0.4444444444444444
+        },
+        {
+          "lower": 0.5,
+          "upper": 0.6,
+          "n": 58,
+          "confidence": 0.5465497713664482,
+          "accuracy": 0.5172413793103449
+        },
+        {
+          "lower": 0.6,
+          "upper": 0.7,
+          "n": 84,
+          "confidence": 0.6511369972001939,
+          "accuracy": 0.4880952380952381
+        },
+        {
+          "lower": 0.7,
+          "upper": 0.8,
+          "n": 131,
+          "confidence": 0.7545594245422887,
+          "accuracy": 0.5954198473282443
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "n": 250,
+          "confidence": 0.8559658603668213,
+          "accuracy": 0.688
+        },
+        {
+          "lower": 0.9,
+          "upper": 1.0,
+          "n": 820,
+          "confidence": 0.9402604260095736,
+          "accuracy": 0.8329268292682926
+        }
+      ],
+      "confidence_by_correctness": {
+        "true": 0.8769034876375811,
+        "false": 0.767108846976967
+      },
+      "ece": 0.1199157003002423
+    }
+  },
+  "sealed_test": {
+    "evaluated": false,
+    "run_count": 0
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "adapter_sha256": "88c64b00d23201118a9b7b4bad192aba6a5fcb5de4e65f00542529554425b4b6",
+  "model_config": {
+    "device": "cuda",
+    "dtype": "fp16",
+    "attn_implementation": "sdpa",
+    "max_tokens": 8192,
+    "max_options": 52,
+    "gradient_checkpointing": false,
+    "pass_position_ids": false,
+    "lora": {
+      "layers": "all",
+      "rank": 16,
+      "alpha": 32,
+      "dropout": 0.05,
+      "targets": null
+    }
+  },
+  "load_seconds": 28.898365404456854,
+  "benchmark_n": 1514,
+  "benchmark_sha256": "8eb0ed3e4d224d369659fbcf750d47eecff7fac7839cdfb193cd64503d5ad56e",
+  "inference_files": {
+    "adapter.safetensors": "88c64b00d23201118a9b7b4bad192aba6a5fcb5de4e65f00542529554425b4b6",
+    "inference_config.json": "293ead6b5660908061725771ca2260efcb9c857b9869bf07b29c0a00bf46b8c6",
+    "jevtrain/__init__.py": "ef79117902f4e908828f36091aa19130ac00f663a9f14bf2e159d950a0d46212",
+    "jevtrain/inference.py": "b08102f75fd3c910995797490a3cf3ac93279fb9b069335f9291bad4cc8c0fad",
+    "jevtrain/model.py": "b638348b873cb1c56480edbc61cbbd5a6037a74ffe3a577e2e8ab7b405e16900",
+    "jevtrain/prompt.py": "537accaf39b94846e39716b80bc9127b501f376c011da19a2aeeb72d020ba083",
+    "predict_choices.py": "eb004622b9546efb2fff5616936de8c54b17595e9ff5995aa123c7bfa42ee4a1",
+    "requirements.txt": "579de1fa1250079eb36df4f7fb59355c072ab460a6aa6f55c501d57dbb9b03ac"
+  },
+  "trained": {
+    "correct": 1028,
+    "supported": 1414,
+    "unsupported": 100,
+    "seconds": 25.964615870267153
+  },
+  "base": {
+    "correct": 907,
+    "supported": 1414,
+    "unsupported": 100,
+    "seconds": 20.928583592176437
+  },
+  "scenario_outputs_exact_match": true,
+  "candidate_boundary": {
+    "options": 52,
+    "status": "ok",
+    "probability_sum": 1.0000000158324838,
+    "answer": "51"
+  },
+  "beyond_profile_boundaries": [
+    {
+      "status": "unsupported",
+      "reason": "53 options exceed max_options 52"
+    },
+    {
+      "status": "unsupported",
+      "reason": "12419 tokens exceed max_tokens"
+    }
+  ],
+  "reference_comparison": {
+    "trained": {
+      "prediction_changes": 0,
+      "max_probability_difference": 0.0
+    },
+    "base": {
+      "prediction_changes": 0,
+      "max_probability_difference": 0.0
+    }
+  }
+}

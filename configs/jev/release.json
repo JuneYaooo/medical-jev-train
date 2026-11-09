@@ -1,0 +1,7 @@
+{
+  "version": "1.1.0",
+  "inference": {
+    "max_options": 52,
+    "max_tokens": 8192
+  }
+}

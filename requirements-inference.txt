@@ -1,0 +1,6 @@
+# Install the appropriate PyTorch build first; RTX 5090 requires CUDA 12.8+.
+torch==2.8.0
+transformers==5.19.0
+huggingface-hub==1.33.0
+safetensors>=0.4,<1
+numpy>=1.26,<3
