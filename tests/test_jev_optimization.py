@@ -2,6 +2,7 @@ import copy
 import tempfile
 import unittest
 import json
+import sys
 from pathlib import Path
 
 from jevtrain.core.calibration import fit_temperature, scale
@@ -17,6 +18,7 @@ def row(uid, task='test', group=None):
 
 
 class OptimizationTests(unittest.TestCase):
+    @unittest.skipIf(sys.platform == 'win32', 'sealed evaluation uses POSIX file locks')
     def test_sealed_attempt_persists_failure_and_blocks_repeat(self):
         from jevtrain.sealed import sealed_attempt
         with tempfile.TemporaryDirectory() as directory:
