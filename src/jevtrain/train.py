@@ -199,7 +199,7 @@ def run_training(config, output, new_rows=None, development=None, parent=None, m
             if model.device == 'cuda':
                 # Return evaluation buffers to the driver; Triton loads kernels outside torch's cache.
                 torch.cuda.empty_cache()
-            result = summary(records, unsupported)
+            result = summary(records, unsupported, rows=development)
             key = selection_key(result)
             entry = {'step': step, 'accuracy': result['accuracy'], 'macro_accuracy': result['macro_accuracy'],
                      'nll': result['nll'], 'correct': result['correct'], 'n': result['n'],

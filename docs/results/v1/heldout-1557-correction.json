@@ -1,0 +1,447 @@
+{
+  "format": "jev-evaluation-denominator-correction-v1",
+  "corrected_on": "2026-11-16",
+  "model_rerun": false,
+  "reason": "The original summaries excluded two unsupported trial_referral questions per model. Unsupported questions count as incorrect under the documented evaluation rule.",
+  "source": {
+    "path": "docs/results/v1/heldout-1557.json",
+    "commit": "fc69ed9a1c39d1075687aaf0d4d2641554d4164a",
+    "git_blob_sha": "cdca1a0647104a300fba7e806bb2ff9b3bd0eabe",
+    "sha256": "270c53c859deea272f188ff8490362b9588ac16af095ac715913a27d3da0246c",
+    "hash_basis": "Git blob bytes, before checkout newline conversion; original artifact is retained unchanged.",
+    "evaluated": "2026-11-07T15:57:13Z",
+    "input_sha256": "ebf69b39d1caa24aecedd489620c4159f063b48a2192e106cb515d83db14b9e7"
+  },
+  "cohort": {
+    "n": 1557,
+    "tasks": 27,
+    "scoring": "All labelled questions; unsupported predictions count as incorrect.",
+    "caveat": "split from rebuilt data whose upstream rows were in the v1 training pool; not a blind test for v1"
+  },
+  "models": {
+    "v1": {
+      "reported": {
+        "n": 1555,
+        "groups": 1444,
+        "correct": 1307,
+        "accuracy": 0.8405144694533762,
+        "macro_accuracy": 0.8474542341641272,
+        "accuracy_95ci": [
+          0.8146279949558638,
+          0.862565445026178
+        ],
+        "unsupported": 2,
+        "unsupported_by_task": {
+          "trial_referral": 2
+        }
+      },
+      "corrected": {
+        "n": 1557,
+        "correct": 1307,
+        "accuracy": 0.8394348105330764,
+        "macro_accuracy": 0.8462196662628926,
+        "supported_n": 1555,
+        "coverage": 0.9987154784842646,
+        "supported_accuracy": 0.8405144694533762,
+        "unsupported": 2,
+        "unsupported_by_task": {
+          "trial_referral": 2
+        },
+        "accuracy_95ci": null,
+        "groups": null,
+        "by_task": {
+          "administration_route_choice": {
+            "n": 60,
+            "correct": 55,
+            "accuracy": 0.9166666666666666,
+            "unsupported": 0
+          },
+          "case_complication": {
+            "n": 60,
+            "correct": 51,
+            "accuracy": 0.85,
+            "unsupported": 0
+          },
+          "case_etiology": {
+            "n": 61,
+            "correct": 48,
+            "accuracy": 0.7868852459016393,
+            "unsupported": 0
+          },
+          "clinical_grade": {
+            "n": 60,
+            "correct": 52,
+            "accuracy": 0.8666666666666667,
+            "unsupported": 0
+          },
+          "consent_action": {
+            "n": 55,
+            "correct": 55,
+            "accuracy": 1.0,
+            "unsupported": 0
+          },
+          "diagnosis_choice": {
+            "n": 58,
+            "correct": 54,
+            "accuracy": 0.9310344827586207,
+            "unsupported": 0
+          },
+          "medical_exam_unmapped": {
+            "n": 64,
+            "correct": 48,
+            "accuracy": 0.75,
+            "unsupported": 0
+          },
+          "examination_choice": {
+            "n": 61,
+            "correct": 51,
+            "accuracy": 0.8360655737704918,
+            "unsupported": 0
+          },
+          "fluid_plan": {
+            "n": 60,
+            "correct": 46,
+            "accuracy": 0.7666666666666667,
+            "unsupported": 0
+          },
+          "followup_plan": {
+            "n": 59,
+            "correct": 55,
+            "accuracy": 0.9322033898305084,
+            "unsupported": 0
+          },
+          "treatment_choice": {
+            "n": 61,
+            "correct": 43,
+            "accuracy": 0.7049180327868853,
+            "unsupported": 0
+          },
+          "infection_precaution": {
+            "n": 60,
+            "correct": 49,
+            "accuracy": 0.8166666666666667,
+            "unsupported": 0
+          },
+          "medication_choice": {
+            "n": 60,
+            "correct": 44,
+            "accuracy": 0.7333333333333333,
+            "unsupported": 0
+          },
+          "message_urgency_pair": {
+            "n": 60,
+            "correct": 59,
+            "accuracy": 0.9833333333333333,
+            "unsupported": 0
+          },
+          "monitoring_target": {
+            "n": 59,
+            "correct": 49,
+            "accuracy": 0.8305084745762712,
+            "unsupported": 0
+          },
+          "nursing_priority": {
+            "n": 60,
+            "correct": 49,
+            "accuracy": 0.8166666666666667,
+            "unsupported": 0
+          },
+          "nutrition_plan": {
+            "n": 57,
+            "correct": 49,
+            "accuracy": 0.8596491228070176,
+            "unsupported": 0
+          },
+          "patient_contraindication": {
+            "n": 60,
+            "correct": 51,
+            "accuracy": 0.85,
+            "unsupported": 0
+          },
+          "patient_counseling": {
+            "n": 60,
+            "correct": 57,
+            "accuracy": 0.95,
+            "unsupported": 0
+          },
+          "pgx_guideline_recommendation": {
+            "n": 60,
+            "correct": 44,
+            "accuracy": 0.7333333333333333,
+            "unsupported": 0
+          },
+          "positioning_choice": {
+            "n": 60,
+            "correct": 47,
+            "accuracy": 0.7833333333333333,
+            "unsupported": 0
+          },
+          "prevention_choice": {
+            "n": 60,
+            "correct": 49,
+            "accuracy": 0.8166666666666667,
+            "unsupported": 0
+          },
+          "rehabilitation_choice": {
+            "n": 60,
+            "correct": 52,
+            "accuracy": 0.8666666666666667,
+            "unsupported": 0
+          },
+          "tcm_pathogenesis_candidate": {
+            "n": 60,
+            "correct": 44,
+            "accuracy": 0.7333333333333333,
+            "unsupported": 0
+          },
+          "tcm_syndrome": {
+            "n": 60,
+            "correct": 46,
+            "accuracy": 0.7666666666666667,
+            "unsupported": 0
+          },
+          "triage_urgency": {
+            "n": 2,
+            "correct": 2,
+            "accuracy": 1.0,
+            "unsupported": 0
+          },
+          "trial_referral": {
+            "n": 60,
+            "correct": 58,
+            "accuracy": 0.9666666666666667,
+            "unsupported": 2
+          }
+        }
+      },
+      "probability_metrics": {
+        "n": 1555,
+        "basis": "Unchanged supported-question aggregate metrics; no probabilities are assigned to unsupported questions.",
+        "nll": 0.49943811456021137,
+        "brier": 0.24134238511317993,
+        "ece": 0.049871978748266335
+      }
+    },
+    "readout": {
+      "reported": {
+        "n": 1555,
+        "groups": 1444,
+        "correct": 1174,
+        "accuracy": 0.754983922829582,
+        "macro_accuracy": 0.7646744888430823,
+        "accuracy_95ci": [
+          0.7272727272727273,
+          0.7787839586028461
+        ],
+        "unsupported": 2,
+        "unsupported_by_task": {
+          "trial_referral": 2
+        }
+      },
+      "corrected": {
+        "n": 1557,
+        "correct": 1174,
+        "accuracy": 0.7540141297366731,
+        "macro_accuracy": 0.7634824922487868,
+        "supported_n": 1555,
+        "coverage": 0.9987154784842646,
+        "supported_accuracy": 0.754983922829582,
+        "unsupported": 2,
+        "unsupported_by_task": {
+          "trial_referral": 2
+        },
+        "accuracy_95ci": null,
+        "groups": null,
+        "by_task": {
+          "administration_route_choice": {
+            "n": 60,
+            "correct": 55,
+            "accuracy": 0.9166666666666666,
+            "unsupported": 0
+          },
+          "case_complication": {
+            "n": 60,
+            "correct": 43,
+            "accuracy": 0.7166666666666667,
+            "unsupported": 0
+          },
+          "case_etiology": {
+            "n": 61,
+            "correct": 46,
+            "accuracy": 0.7540983606557377,
+            "unsupported": 0
+          },
+          "clinical_grade": {
+            "n": 60,
+            "correct": 32,
+            "accuracy": 0.5333333333333333,
+            "unsupported": 0
+          },
+          "consent_action": {
+            "n": 55,
+            "correct": 48,
+            "accuracy": 0.8727272727272727,
+            "unsupported": 0
+          },
+          "diagnosis_choice": {
+            "n": 58,
+            "correct": 47,
+            "accuracy": 0.8103448275862069,
+            "unsupported": 0
+          },
+          "medical_exam_unmapped": {
+            "n": 64,
+            "correct": 47,
+            "accuracy": 0.734375,
+            "unsupported": 0
+          },
+          "examination_choice": {
+            "n": 61,
+            "correct": 44,
+            "accuracy": 0.7213114754098361,
+            "unsupported": 0
+          },
+          "fluid_plan": {
+            "n": 60,
+            "correct": 38,
+            "accuracy": 0.6333333333333333,
+            "unsupported": 0
+          },
+          "followup_plan": {
+            "n": 59,
+            "correct": 52,
+            "accuracy": 0.8813559322033898,
+            "unsupported": 0
+          },
+          "treatment_choice": {
+            "n": 61,
+            "correct": 40,
+            "accuracy": 0.6557377049180327,
+            "unsupported": 0
+          },
+          "infection_precaution": {
+            "n": 60,
+            "correct": 39,
+            "accuracy": 0.65,
+            "unsupported": 0
+          },
+          "medication_choice": {
+            "n": 60,
+            "correct": 42,
+            "accuracy": 0.7,
+            "unsupported": 0
+          },
+          "message_urgency_pair": {
+            "n": 60,
+            "correct": 56,
+            "accuracy": 0.9333333333333333,
+            "unsupported": 0
+          },
+          "monitoring_target": {
+            "n": 59,
+            "correct": 43,
+            "accuracy": 0.7288135593220338,
+            "unsupported": 0
+          },
+          "nursing_priority": {
+            "n": 60,
+            "correct": 44,
+            "accuracy": 0.7333333333333333,
+            "unsupported": 0
+          },
+          "nutrition_plan": {
+            "n": 57,
+            "correct": 44,
+            "accuracy": 0.7719298245614035,
+            "unsupported": 0
+          },
+          "patient_contraindication": {
+            "n": 60,
+            "correct": 45,
+            "accuracy": 0.75,
+            "unsupported": 0
+          },
+          "patient_counseling": {
+            "n": 60,
+            "correct": 47,
+            "accuracy": 0.7833333333333333,
+            "unsupported": 0
+          },
+          "pgx_guideline_recommendation": {
+            "n": 60,
+            "correct": 42,
+            "accuracy": 0.7,
+            "unsupported": 0
+          },
+          "positioning_choice": {
+            "n": 60,
+            "correct": 43,
+            "accuracy": 0.7166666666666667,
+            "unsupported": 0
+          },
+          "prevention_choice": {
+            "n": 60,
+            "correct": 41,
+            "accuracy": 0.6833333333333333,
+            "unsupported": 0
+          },
+          "rehabilitation_choice": {
+            "n": 60,
+            "correct": 43,
+            "accuracy": 0.7166666666666667,
+            "unsupported": 0
+          },
+          "tcm_pathogenesis_candidate": {
+            "n": 60,
+            "correct": 45,
+            "accuracy": 0.75,
+            "unsupported": 0
+          },
+          "tcm_syndrome": {
+            "n": 60,
+            "correct": 50,
+            "accuracy": 0.8333333333333334,
+            "unsupported": 0
+          },
+          "triage_urgency": {
+            "n": 2,
+            "correct": 2,
+            "accuracy": 1.0,
+            "unsupported": 0
+          },
+          "trial_referral": {
+            "n": 60,
+            "correct": 56,
+            "accuracy": 0.9333333333333333,
+            "unsupported": 2
+          }
+        }
+      },
+      "probability_metrics": {
+        "n": 1555,
+        "basis": "Unchanged supported-question aggregate metrics; no probabilities are assigned to unsupported questions.",
+        "nll": 0.6660676852860524,
+        "brier": 0.3326225857629189,
+        "ece": 0.04297647104385965
+      }
+    }
+  },
+  "confidence_intervals": {
+    "status": "not_recomputed",
+    "reason": "The preserved aggregate results do not provide the question-level predictions and group assignments needed to recompute full-cohort bootstrap intervals. Original intervals apply to the old supported-only cohort."
+  },
+  "v1_vs_readout": {
+    "reported": {
+      "accuracy_delta": 0.08553054662379421,
+      "group_bootstrap_95ci": [
+        0.06527415143603134,
+        0.10420711974110032
+      ]
+    },
+    "corrected": {
+      "n": 1557,
+      "accuracy_delta": 0.08542068079640334,
+      "group_bootstrap_95ci": null
+    }
+  }
+}

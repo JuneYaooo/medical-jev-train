@@ -9,20 +9,13 @@ from collections import Counter
 import json
 from pathlib import Path
 
-from jevtrain.metrics import comparison, input_hash, read_rows, write_json
+from jevtrain.metrics import comparison, read_rows, write_json
+from jevtrain.evaluation_cohort import full_records as cohort_records
 
 
 def full_records(run, benchmark):
-    records = {r['id']: r for r in read_rows(Path(run) / 'predictions.jsonl')}
-    output = []
-    for row in benchmark:
-        r = records.get(row['id'])
-        if r is None:  # unsupported: counted wrong
-            r = {'id': row['id'], 'group_id': row['group_id'], 'task': row['task'], 'gold': row['gold'],
-                 'input_sha256': input_hash(row['request']), 'prediction': None, 'correct': False,
-                 'unsupported': True}
-        output.append(r)
-    return output
+    records = read_rows(Path(run) / 'predictions.jsonl')
+    return cohort_records(benchmark, records)
 
 
 def main():
@@ -33,8 +26,13 @@ def main():
     parser.add_argument('--output', default='runs/comparison.json')
     args = parser.parse_args()
     bench = read_rows(args.benchmark)
-    width = {r['id']: len(r['request']['questions']['decision']['criteria']) for r in bench}
     models = {'base': full_records(args.base, bench), 'candidate': full_records(args.candidate, bench)}
+    bench = [r for r in bench if r.get('gold') is not None]
+    if not bench:
+        raise ValueError('no labelled records to score')
+    labelled_ids = {r['id'] for r in bench}
+    models = {name: [r for r in records if r['id'] in labelled_ids] for name, records in models.items()}
+    width = {r['id']: len(r['request']['questions']['decision']['criteria']) for r in bench}
     report = {'n': len(bench), 'runs': {'base': args.base, 'candidate': args.candidate},
               'policy': 'direct <=52 options (8192 tokens), block elimination above 52',
               'models': {}, 'by_task': {}, 'subsets': {}}
