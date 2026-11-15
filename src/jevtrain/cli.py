@@ -10,7 +10,7 @@
   python scripts/jev.py train   --config configs/jev/train.example.json --output runs/train
   python scripts/jev.py eval    --config configs/jev/train.example.json --checkpoint runs/x/best.safetensors \\
                                 --input dev.jsonl --views 4 --output runs/x/eval_dev
-  python scripts/jev.py compare --base a/predictions.jsonl --candidate b/predictions.jsonl
+  python scripts/jev.py compare --base a/predictions.jsonl --candidate b/predictions.jsonl --input bench.jsonl
 
 See docs/TRAINING.md.
 """
@@ -77,6 +77,7 @@ def main(argv=None):
     p = sub.add_parser('compare')
     p.add_argument('--base', required=True)
     p.add_argument('--candidate', required=True)
+    p.add_argument('--input', required=True, help='authoritative evaluation JSONL; missing predictions count wrong')
     args = parser.parse_args(argv)
 
     if args.command == 'import-benchmark':
@@ -147,7 +148,8 @@ def main(argv=None):
     if args.command == 'compare':
         from jevtrain.evaluate import paired, task_table
         base, candidate = read_rows(args.base), read_rows(args.candidate)
-        print(json.dumps({'paired': paired(base, candidate), 'tasks': task_table(base, candidate)},
+        rows = read_rows(args.input)
+        print(json.dumps({'paired': paired(base, candidate, rows=rows), 'tasks': task_table(base, candidate, rows=rows)},
                          ensure_ascii=False, indent=2))
         return
     config = load_config(args.config)
@@ -204,12 +206,13 @@ def main(argv=None):
                 spec['max_tokens'] = args.max_tokens
             above = 26 if args.large_options and args.tournament_above is None else args.tournament_above
             model = ChoiceModel(spec, checkpoint=args.checkpoint)
-            records, unsupported = predict(model, read_rows(args.input), view_count=args.views,
+            rows = read_rows(args.input)
+            records, unsupported = predict(model, rows, view_count=args.views,
                                            batch_size=args.batch_size, tournament_above=above)
             out = Path(args.output)
             write_rows(out / 'predictions.jsonl', records)
             write_rows(out / 'unsupported.jsonl', unsupported)
-            result = summary(records, unsupported)
+            result = summary(records, unsupported, rows=rows)
             result.update(checkpoint=args.checkpoint or 'readout', views=args.views, input=args.input,
                           policy={'max_options': spec.get('max_options', 26), 'max_tokens': spec.get('max_tokens', 2048),
                                   'tournament_above': above})

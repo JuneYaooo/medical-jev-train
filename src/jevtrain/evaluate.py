@@ -1,5 +1,6 @@
 """Multi-view evaluation, per-task metrics and paired comparisons."""
 from collections import Counter, defaultdict
+import math
 import random
 
 from .contracts import require
@@ -7,6 +8,7 @@ from .metrics import comparison, input_hash, metrics
 
 from .data import option_keys, views
 from .model import UnsupportedRow
+from .evaluation_cohort import full_records, indexed
 
 
 def predict(model, rows, view_count=1, batch_size=8, large_options=False, tournament_above=None,
@@ -92,39 +94,85 @@ def accuracy_ci(records, seed=17, samples=1000):
     return [boot[int(samples * 0.025)], boot[int(samples * 0.975) - 1]]
 
 
-def summary(records, unsupported=()):
-    labelled = [r for r in records if r['correct'] is not None]
-    require(labelled, 'no labelled supported records to score')
-    result = metrics(labelled)
+def _valid_probabilities(record):
+    probabilities = record.get('probabilities')
+    if not isinstance(probabilities, dict) or record['gold'] not in probabilities:
+        return False
+    if 'option_order' in record and set(probabilities) != set(record['option_order']):
+        return False
+    values = list(probabilities.values())
+    return (bool(values) and all(isinstance(p, (int, float)) and math.isfinite(p) and 0 <= p <= 1
+                                for p in values)
+            and math.isclose(sum(values), 1.0, rel_tol=1e-5, abs_tol=1e-5))
+
+
+def summary(records, unsupported=(), *, rows=None):
+    """Accuracy over all labelled inputs; probability metrics over valid supported predictions.
+
+    Legacy summary(records) remains valid for complete supported cohorts. Supply
+    authoritative rows whenever any inputs are unsupported or missing.
+    """
+    records, unsupported = list(records), list(unsupported)
+    require(rows is not None or not unsupported, 'rows are required to score unsupported inputs')
+    outcomes = full_records(rows, records, unsupported) if rows is not None else list(indexed(records, 'prediction').values())
+    labelled = [r for r in outcomes if r['correct'] is not None]
+    require(labelled, 'no labelled records to score')
+    supported = [r for r in labelled if r.get('prediction') is not None and not r.get('unsupported')]
+    probabilistic = [r for r in supported if _valid_probabilities(r)]
+    result = metrics(probabilistic) if probabilistic else {
+        'nll': None, 'brier': None, 'ece': None, 'reliability': [],
+        'confidence_by_correctness': {'true': None, 'false': None}}
+    result.update(input_n=len(outcomes), n=len(labelled), unlabelled_n=len(outcomes) - len(labelled),
+                  groups=len({r['group_id'] for r in labelled}), supported_n=len(supported),
+                  coverage=len(supported) / len(labelled),
+                  supported_accuracy=(sum(r['correct'] for r in supported) / len(supported) if supported else None),
+                  probability_metrics_n=len(probabilistic))
     result['correct'] = sum(r['correct'] for r in labelled)
+    result['accuracy'] = result['correct'] / len(labelled)
     result['accuracy_95ci'] = accuracy_ci(labelled)
-    result['flip_rate'] = sum(r['flipped'] for r in labelled if r['views'] > 1) / max(
-        1, sum(r['views'] > 1 for r in labelled))
-    for task, value in result['by_task'].items():
-        value['correct'] = sum(r['correct'] for r in labelled if r['task'] == task)
-    result['unsupported'] = len(unsupported)
-    result['unsupported_by_task'] = dict(Counter(u.get('task') for u in unsupported))
+    result['flip_rate'] = sum(r.get('flipped', False) for r in supported if r.get('views', 1) > 1) / max(
+        1, sum(r.get('views', 1) > 1 for r in supported))
+    tasks = defaultdict(list)
+    for r in labelled:
+        tasks[r['task']].append(r['correct'])
+    result['by_task'] = {task: {'n': len(values), 'correct': sum(values), 'accuracy': sum(values) / len(values)}
+                         for task, values in sorted(tasks.items())}
+    result['macro_accuracy'] = sum(v['accuracy'] for v in result['by_task'].values()) / len(tasks)
+    rejected = [r for r in outcomes if r.get('unsupported') or r.get('prediction') is None]
+    result['unsupported'] = len(rejected)
+    result['unsupported_by_task'] = dict(Counter(r.get('task') for r in rejected))
     return result
 
 
-def paired(base, candidate):
-    """Paired delta on the shared ids, with group bootstrap CI."""
-    shared = {r['id'] for r in base} & {r['id'] for r in candidate}
-    require(shared, 'no shared evaluation ids')
-    b = [r for r in base if r['id'] in shared]
-    c = [r for r in candidate if r['id'] in shared]
+def _paired_records(base, candidate, rows):
+    if rows is not None:
+        rows = list(rows)
+        base, candidate = full_records(rows, base), full_records(rows, candidate)
+    else:
+        base, candidate = list(base), list(candidate)
+    b, c = indexed(base, 'base prediction'), indexed(candidate, 'candidate prediction')
+    require(b.keys() == c.keys(), 'evaluation cohorts differ; provide rows for full-cohort comparison')
+    for uid in b:
+        require(all(b[uid][key] == c[uid][key] for key in ('group_id', 'task', 'gold', 'input_sha256')),
+                'paired evaluation input changed: ' + str(uid))
+    return ([r for r in base if r['correct'] is not None],
+            [r for r in candidate if r['correct'] is not None])
+
+
+def paired(base, candidate, *, rows=None):
+    """Paired delta on identical cohorts; missing predictions count wrong with rows."""
+    b, c = _paired_records(base, candidate, rows)
     return comparison(b, c)
 
 
-def task_table(base, candidate):
-    """Per-task accuracy for two record sets on shared ids."""
-    shared = {r['id'] for r in base} & {r['id'] for r in candidate}
+def task_table(base, candidate, *, rows=None):
+    """Per-task accuracy on the same full cohort used by paired()."""
+    base, candidate = _paired_records(base, candidate, rows)
     rows = defaultdict(lambda: {'n': 0, 'base': 0, 'candidate': 0})
     index = {r['id']: r for r in candidate}
     for r in base:
-        if r['id'] in shared:
-            entry = rows[r['task']]
-            entry['n'] += 1
-            entry['base'] += r['correct']
-            entry['candidate'] += index[r['id']]['correct']
+        entry = rows[r['task']]
+        entry['n'] += 1
+        entry['base'] += r['correct']
+        entry['candidate'] += index[r['id']]['correct']
     return {t: {**v, 'delta': (v['candidate'] - v['base']) / v['n']} for t, v in sorted(rows.items())}

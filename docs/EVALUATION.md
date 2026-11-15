@@ -18,9 +18,10 @@
 
 ## 指标
 
-- **准确率**：答对题数 / 全部题数。无效回答、请求失败、超出接口上限都计错，不从分母中扣除。
-- **配对比较**：同一批题逐题对照，按来源组 bootstrap（5,000 次）给出 95% 区间；区间跨 0 视为无显著差异。
-- **ECE**：10 个等宽置信度箱，衡量概率是否可信；越小越好。v1 概率未经校准。
+- **准确率**：答对题数 / 全部有标签题数（`n`）。无效回答、请求失败、缺失预测、超出接口上限都计错，不从分母中扣除；`input_n` 为全部输入题数，无标签题数 `unlabelled_n` 单列，不纳入准确率分母。逐任务准确率、任务宏平均和准确率区间也使用这一全题口径。
+- **覆盖率与支持题准确率**：另列有标签题中的支持题数 `supported_n`、支持比例 `coverage` 和仅在支持题上计算的 `supported_accuracy`；支持题准确率不能替代全题准确率。
+- **配对比较**：使用同一份原始评测题目补齐两个模型的预测，再按来源组 bootstrap 给出 95% 区间；区间跨 0 视为无显著差异。普通 `jev compare` 必须通过 `--input` 提供原题，不再默认只比较共享预测 ID。
+- **概率指标**：NLL、Brier、ECE 及可靠性分箱仅使用有标签且有有效概率的预测，计分题数另列为 `probability_metrics_n`。无有效概率的预测不参与概率指标，但有效作答仍按答案对错计分；未答、不支持的题仍按错误计入全题准确率。没有有效概率时这些指标为空，不为未答题构造概率。ECE 使用 10 个等宽置信度箱，越小越好；v1 概率未经校准。
 
 ## 推理口径
 
@@ -103,10 +104,14 @@ v1 相对原始 4B：+8.26 个百分点，95% 区间 [5.74, 10.88]；修复 264 
 
 | 模型 | 答对 / 1,557 | 准确率 | 宏平均 |
 | --- | ---: | ---: | ---: |
-| v1 | 1,307 | 84.05% | 84.75% |
-| 原始 4B | 1,174 | 75.50% | 76.47% |
+| v1 | 1,307 | 83.94% | 84.62% |
+| 原始 4B | 1,174 | 75.40% | 76.35% |
 
-v1 相对原始 4B +8.55 个百分点，区间 [6.53, 10.42]。该集合切自重建的数据，v1 当时的训练池包含其上游来源，v1 抽样训练的 44,847 条具体是哪些已无记录，因此部分题可能被 v1 训练过。提升幅度与外部基准（+8.26）接近，但不能据此证明没有重叠。记录：[results/v1/heldout-1557.json](results/v1/heldout-1557.json)。
+v1 相对原始 4B +8.54 个百分点。2026-11-16 更正：原始成绩的实际分母为 1,555，两个模型各有 2 道临床试验转介题未计分，因此原先的 84.05% / 75.50% 是支持题准确率。上表按全部 1,557 题重算；临床试验转介任务的分母也由 58 改为 60，宏平均随之更正。正确题数没有变化，也未重新运行模型。
+
+原差值区间 [6.53, 10.42] 属于旧的 1,555 题口径，不是更正后全题差值的置信区间。现有汇总不足以还原全部题的逐题分组情况，因此更正后的模型准确率区间和配对差值区间均未重算。
+
+该集合切自重建的数据，v1 当时的训练池包含其上游来源，v1 抽样训练的 44,847 条具体是哪些已无记录，因此部分题可能被 v1 训练过。提升幅度与外部基准（+8.26）接近，但不能据此证明没有重叠。[原始记录](results/v1/heldout-1557.json) 保持不变；[更正记录](results/v1/heldout-1557-correction.json) 列出来源哈希、原始值及更正后的点估计。
 
 ## 复现
 
@@ -117,4 +122,12 @@ jev eval --config configs/jev/release/train.json \
   --max-options 52 --max-tokens 8192 --tournament-above 52 --batch-size 1 --output runs/bench-v1
 ```
 
-不加 `--checkpoint` 即评测原始底座。基准文件由 `jev import-benchmark --benchmark <jev-healthcare-lab>/benchmarks/medical_decision_v1 --output work/benchmark/medical_decision_v1.jsonl` 生成。配对比较：`python scripts/compare.py --base runs/bench-readout --candidate runs/bench-v1`。
+不加 `--checkpoint` 即评测原始底座。基准文件由 `jev import-benchmark --benchmark <jev-healthcare-lab>/benchmarks/medical_decision_v1 --output work/benchmark/medical_decision_v1.jsonl` 生成。配对比较使用同一份原题：
+
+```bash
+jev compare --base runs/bench-readout/predictions.jsonl \
+  --candidate runs/bench-v1/predictions.jsonl \
+  --input work/benchmark/medical_decision_v1.jsonl
+```
+
+需要比较脚本的子集报告时，运行 `python scripts/compare.py --base runs/bench-readout --candidate runs/bench-v1 --benchmark work/benchmark/medical_decision_v1.jsonl`。两个入口均按完整有标签题集计分，不把缺失预测从分母扣除。

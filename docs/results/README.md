@@ -8,7 +8,9 @@
 | 原始 4B | 907 / 59.91% | 64.14% | — | — |
 | JEV 1.13 存档 | 1,073 / 70.87% | 73.90% | — | — |
 
-ECE 使用 10 个等宽置信度箱，缺少有效概率的题不进入 ECE 分母，但仍按错误计入全部准确率。概率未经校准；此处计算 ECE 不意味着完成校准。
+ECE 使用 10 个等宽置信度箱，缺少有效概率的预测不进入 ECE 分母；有效作答仍按答案对错计分，未答、不支持的题则按错误计入全部准确率。概率未经校准；此处计算 ECE 不意味着完成校准。
+
+1,557 题留出测试已于 2026-11-16 更正分母：v1 为 1,307 / 1,557（83.94%），原始 4B 为 1,174 / 1,557（75.40%），差值 +8.54 个百分点。各模型原来漏计的 2 道不支持题现按错误纳入；未重新运行模型。更正后的置信区间无法从现有汇总重算，见[更正说明](../EVALUATION.md#训练分布内留出测试)。
 
 LoRA 相对原始模型提高 7.99 个百分点，95% 分组 bootstrap 区间 [5.45, 10.41]。可回答子集上相对 JEV 的差值为 −1.20 个百分点，区间 [−3.70, 1.27]。JEV 是存档版本；接口可回答子集排除了全部 100 道 148 候选中医证型题。
 
@@ -20,11 +22,15 @@ LoRA 相对原始模型提高 7.99 个百分点，95% 分组 bootstrap 区间 [5
 
 ## 机器可读证据
 
-`summary.json` 字段：`all`、`answerable`、`by_task`、`calibration`、`sealed_test`、`checkpoint_sha256`。旧 `comparison.json` 保留配对比较字段，并引用统一摘要。
+发布存档 `v1/summary.json` 字段：`all`、`answerable`、`by_task`、`calibration`、`sealed_test`、`checkpoint_sha256`。旧 `comparison.json` 保留配对比较字段，并引用统一摘要；这些历史文件没有覆盖。
+
+新运行的 `jev eval` 摘要以 `n` 表示全部有标签题数，`accuracy` 和 `macro_accuracy` 按未答也计错计算；`supported_n`、`coverage`、`supported_accuracy` 单列支持题口径。NLL、Brier、ECE 的计分题数为 `probability_metrics_n`，不能用全题数解释其分母。`input_n` 包含全部输入题，无标签题数 `unlabelled_n` 单列，不进入准确率分母。
 
 | 版本 | 摘要 | 配对比较 | 逐题记录 | 下载验证 |
 |---|---|---|---|---|
 | LoRA | [summary](v1/summary.json) | [comparison](v1/comparison.json) | [per-question](v1/per-question.jsonl) | [hub-validation](v1/hub-validation.json) |
+
+留出测试的[原始成绩](v1/heldout-1557.json) 与[分母更正记录](v1/heldout-1557-correction.json) 分开保存；更正记录包含原始 Git blob 的 SHA-256，便于核对原值与修正依据。
 
 分诊标签、来源和长度分布、检查点重排、可靠性分箱及正确/错误置信度均值见 [v1 诊断](v1/diagnostics.json)。
 
