@@ -68,49 +68,107 @@ def group_hash(seed, group):
     return content_hash([str(seed), group])
 
 
+def _isolated_components(rows, exclude_groups=(), exclude_inputs=()):
+    """Connect case groups and exact model inputs before propagating exclusions.
+
+    Fingerprints deliberately retain the displayed option order. No normalized
+    text or answer label is used to join records. All member records are kept.
+    """
+    rows = list(rows)
+    parents = list(range(len(rows)))
+    sizes = [1] * len(rows)
+
+    def find(index):
+        while parents[index] != index:
+            parents[index] = parents[parents[index]]
+            index = parents[index]
+        return index
+
+    def union(first, second):
+        first, second = find(first), find(second)
+        if first != second:
+            if sizes[first] < sizes[second]:
+                first, second = second, first
+            parents[second] = first
+            sizes[first] += sizes[second]
+
+    groups, inputs = {}, {}
+    fingerprints = []
+    for index, row in enumerate(rows):
+        fingerprint = input_hash(row['request'])
+        fingerprints.append(fingerprint)
+        union(index, groups.setdefault(row['group_id'], index))
+        union(index, inputs.setdefault(fingerprint, index))
+    connected = defaultdict(list)
+    for index, row in enumerate(rows):
+        connected[find(index)].append((row, fingerprints[index]))
+
+    exclude_groups, exclude_inputs = set(exclude_groups), set(exclude_inputs)
+    kept, dropped = [], []
+    for members in connected.values():
+        members.sort(key=lambda item: (item[0]['id'], item[0]['task'], item[0]['group_id'], item[1],
+                                       content_hash(item[0])))
+        component = {'key': min(row['group_id'] for row, _ in members),
+                     'task': members[0][0]['task'], 'rows': [row for row, _ in members]}
+        excluded = any(row['group_id'] in exclude_groups or fingerprint in exclude_inputs
+                       for row, fingerprint in members)
+        (dropped if excluded else kept).append(component)
+    return kept, dropped
+
+
 def stratified_split(rows, per_task, names=('development', 'test'), seed=17,
                      max_fraction=0.3, exclude_groups=(), exclude_inputs=()):
-    """Assign whole case groups to evaluation sets, stratified by task.
+    """Assign group/exact-input components to sets, stratified by task.
 
-    Each set receives up to ``per_task`` rows per task. No set takes more than
-    ``max_fraction`` of a task's groups, so small tasks keep training data.
-    Rows sharing an excluded group or an excluded input hash are dropped.
+    ``per_task`` is a soft row target: a whole component may exceed it. A mixed
+    task component is assigned to its lowest-id member's task. ``max_fraction``
+    caps component counts in that representative-task stratum, not row counts
+    for every task represented in mixed components. Small strata stay in pool.
+    Any excluded group/input removes its entire connected component.
     Returns ({name: rows}, pool_rows, report).
     """
-    require(per_task > 0 and names and 0 < max_fraction <= 1, 'invalid split settings')
-    exclude_groups, exclude_inputs = set(exclude_groups), set(exclude_inputs)
-    by_group, dropped = defaultdict(list), 0
-    for row in rows:
-        if row['group_id'] in exclude_groups or input_hash(row['request']) in exclude_inputs:
-            dropped += 1
-            continue
-        by_group[row['group_id']].append(row)
-    # A group belongs to the task of its first row, so a case never spans sets.
+    require(per_task > 0 and names and len(set(names)) == len(names) and 'pool' not in names
+            and 0 < max_fraction <= 1, 'invalid split settings')
+    components, excluded = _isolated_components(rows, exclude_groups, exclude_inputs)
     task_groups = defaultdict(list)
-    for group, members in by_group.items():
-        task_groups[members[0]['task']].append(group)
+    for component in components:
+        task_groups[component['task']].append(component)
     sets = {name: [] for name in names}
     pool = []
-    report = {}
+    assigned_components = {name: 0 for name in [*names, 'pool']}
     for task in sorted(task_groups):
-        groups = sorted(task_groups[task], key=lambda g: group_hash(seed, g))
+        groups = sorted(task_groups[task], key=lambda c: (group_hash(seed, c['key']), c['key']))
         cap = max(1, int(len(groups) * max_fraction)) if len(groups) > len(names) else 0
         cursor = 0
-        counts = {}
         for name in names:
             taken, used = [], 0
             while cursor < len(groups) and len(taken) < per_task and used < cap:
-                taken.extend(by_group[groups[cursor]])
+                taken.extend(groups[cursor]['rows'])
                 cursor += 1
                 used += 1
             sets[name].extend(taken)
-            counts[name] = len(taken)
-        for group in groups[cursor:]:
-            pool.extend(by_group[group])
-        counts['pool'] = sum(len(by_group[g]) for g in groups[cursor:])
-        report[task] = counts
-    return sets, pool, {'by_task': report, 'dropped_by_exclusion': dropped,
-                        'sizes': {**{k: len(v) for k, v in sets.items()}, 'pool': len(pool)}}
+            assigned_components[name] += used
+        for component in groups[cursor:]:
+            pool.extend(component['rows'])
+        assigned_components['pool'] += len(groups) - cursor
+
+    # Count actual tasks, not only the representative task used for allocation.
+    report = {task: {name: 0 for name in [*names, 'pool']}
+              for task in sorted({r['task'] for c in components for r in c['rows']})}
+    for name, values in [*sets.items(), ('pool', pool)]:
+        for row in values:
+            report[row['task']][name] += 1
+    return sets, pool, {
+        'by_task': report,
+        'dropped_by_exclusion': sum(len(c['rows']) for c in excluded),
+        'sizes': {**{k: len(v) for k, v in sets.items()}, 'pool': len(pool)},
+        'components': {'total': len(components) + len(excluded), 'excluded': len(excluded),
+                       'remaining': len(components),
+                       'mixed_task': sum(len({r['task'] for r in c['rows']}) > 1 for c in components),
+                       'by_stratum': {t: len(task_groups[t]) for t in sorted(task_groups)},
+                       'by_set': assigned_components},
+        'target_shortfall': {task: {name: max(0, per_task - counts[name]) for name in names}
+                             for task, counts in report.items()}}
 
 
 def exclusion_keys(rows):
@@ -118,14 +176,40 @@ def exclusion_keys(rows):
 
 
 def isolate(rows, heldouts):
-    """Drop rows sharing a group or exact input with any held-out row."""
+    """Drop complete group/exact-input components touching a held-out row."""
+    rows = list(rows)
     groups, inputs = set(), set()
     for held in heldouts:
         g, i = exclusion_keys(held)
         groups |= g
         inputs |= i
-    kept = [r for r in rows if r['group_id'] not in groups and input_hash(r['request']) not in inputs]
+    components, _ = _isolated_components(rows, groups, inputs)
+    retained = {id(row) for component in components for row in component['rows']}
+    kept = [r for r in rows if id(r) in retained]
     return kept, len(rows) - len(kept)
+
+
+def validate_split(sets, pool, exclude_groups=(), exclude_inputs=()):
+    """Reject cross-set/excluded group or input overlap before writing files.
+
+    Uses only standard-library data helpers; callers need no model or GPU.
+    Errors include at most five record examples and never modify the inputs.
+    """
+    require('pool' not in sets, 'pool is reserved for training rows')
+    excluded = {'group_id': set(exclude_groups), 'input_hash': set(exclude_inputs)}
+    owners = {'group_id': {}, 'input_hash': {}}
+    errors = []
+    for name, values in [*sorted(sets.items()), ('pool', pool)]:
+        for row in sorted(values, key=lambda r: (r['id'], r['group_id'])):
+            for kind, key in [('group_id', row['group_id']), ('input_hash', input_hash(row['request']))]:
+                if key in excluded[kind]:
+                    errors.append(f"excluded {kind}: {name}/{row['id']}")
+                owner = owners[kind].setdefault(key, (name, row['id']))
+                if owner[0] != name:
+                    errors.append(f"{kind}: {owner[0]}/{owner[1]} conflicts with {name}/{row['id']}")
+                if len(errors) >= 5:
+                    raise ValueError('split isolation failed: ' + '; '.join(errors[:5]))
+    require(not errors, 'split isolation failed: ' + '; '.join(errors))
 
 
 def hash_order(rows, seed):

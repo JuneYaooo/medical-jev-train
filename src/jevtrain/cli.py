@@ -20,7 +20,7 @@ from pathlib import Path
 import sys
 
 
-from jevtrain.data import exclusion_keys, read_rows, stratified_split, write_json, write_rows  # noqa: E402
+from jevtrain.data import exclusion_keys, read_rows, stratified_split, validate_split, write_json, write_rows  # noqa: E402
 
 
 from jevtrain.config import load_config
@@ -134,6 +134,7 @@ def main(argv=None):
             inputs |= i
         sets, pool, report = stratified_split(rows, args.per_task, tuple(args.names), args.seed,
                                               args.max_fraction, groups, inputs)
+        validate_split(sets, pool, groups, inputs)
         out = Path(args.output)
         for name, values in sets.items():
             write_rows(out / f'{name}.jsonl', values)
