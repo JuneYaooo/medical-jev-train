@@ -194,10 +194,15 @@ def main(argv=None):
         from jevtrain.evaluate import predict, summary
         from jevtrain.model import ChoiceModel
         from contextlib import nullcontext
-        from jevtrain.sealed import sealed_attempt
         if args.sealed_ledger and not args.checkpoint:
             parser.error('--sealed-ledger requires a fixed checkpoint')
-        context = sealed_attempt(args.sealed_ledger, args.input, args.checkpoint) if args.sealed_ledger else nullcontext(None)
+        if args.sealed_ledger:
+            if sys.platform == 'win32':
+                parser.error('--sealed-ledger is only supported on POSIX; ordinary evaluation works on Windows')
+            from jevtrain.sealed import sealed_attempt
+            context = sealed_attempt(args.sealed_ledger, args.input, args.checkpoint)
+        else:
+            context = nullcontext(None)
         with context as sealed_status:
             spec = dict(config['model'])
             if args.max_options is not None:
