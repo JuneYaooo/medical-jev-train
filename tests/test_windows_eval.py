@@ -134,7 +134,7 @@ class WindowsEvaluationTests(unittest.TestCase):
             return original_read(path, *args, **kwargs)
 
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()  # macOS temp dirs sit behind the /var -> /private/var symlink
             config = root / 'config.json'
             config.write_text(json.dumps({'paths_file': 'paths.json',
                                           'local_model': '${paths.models}/base',
