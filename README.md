@@ -2,136 +2,174 @@
 
 # medical-jev-4b
 
-**单卡本地运行的 4B 医疗选择题决策模型**
+**一个能在自己显卡上运行的医疗选择题模型**
 
-给一段病例和几个候选项，一次前向选出答案，并返回每个选项的概率。
+给它一段病例和几个选项，它会选出一个答案，并告诉你每个选项的概率。
 
-[![Model](https://img.shields.io/badge/🤗_Model-v1.1.0-yellow)](https://huggingface.co/JuneYao/medical-jev-4b/tree/v1.1.0)
-[![Dataset](https://img.shields.io/badge/🤗_Dataset-242,921_题-yellow)](https://huggingface.co/datasets/JuneYao/medical-jev-4b-data)
-[![Benchmark](https://img.shields.io/badge/Benchmark-1,514_题-2a78d6)](https://github.com/JuneYaooo/jev-healthcare-lab)
+[![Model](https://img.shields.io/badge/🤗_模型-v1.1.0-yellow)](https://huggingface.co/JuneYao/medical-jev-4b/tree/v1.1.0)
+[![Dataset](https://img.shields.io/badge/🤗_数据-242,921_题-yellow)](https://huggingface.co/datasets/JuneYao/medical-jev-4b-data)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.12-3776AB)](#快速开始)
-[![Not for clinical use](https://img.shields.io/badge/⚠️_不用于临床决策-critical)](#免责声明)
+[![Not for clinical use](https://img.shields.io/badge/⚠️_不用于临床决策-critical)](#不能用来做什么)
 
 **简体中文** · [English](README_en.md)
 
-[快速开始](#快速开始) · [效果](#效果) · [已知短板](#已知短板) · [训练复现](#训练复现) · [完整评测](docs/EVALUATION.md) · [训练方法](docs/TRAINING.md) · [版本记录](CHANGELOG.md)
+[看个例子](#看个例子) · [效果如何](#效果如何) · [快速开始](#快速开始) · [不能用来做什么](#不能用来做什么) · [技术细节](#技术细节)
 
 </div>
 
-<br>
+## 这是什么
 
-| 外部基准准确率 | 发布包默认准确率 | 相对原始 4B | 直接打分速度 | 适配器 |
-| :---: | :---: | :---: | :---: | :---: |
-| **69.35%** | **67.90%** | **+8.26 pp** | **约 54 题/秒** | **130 MB** |
-| 1,050 / 1,514，含分块淘汰 | 1,028 / 1,514，超 52 候选计错 | 95% 区间 [5.74, 10.88] | RTX 5090，1,414 题 | 无 API 费用 |
+很多医学问题可以写成选择题：这个病例最可能是什么病？这个方案有没有禁忌？下一步该做什么检查？
 
-<p align="center"><img src="docs/figures/results.svg" alt="评测结果：外部基准总体准确率与逐任务准确率" width="100%"></p>
+medical-jev-4b 专门做这类题。它只从你给的选项里选，不写长篇解释，所以速度快，结果也方便程序直接读取。模型不需要联网调用付费接口，一张显卡就能运行。
 
-**图 1｜外部基准结果。** **a**，1,514 题总体准确率，所有模型都以全部题目为分母。**b**，题数为 100 的 13 类任务；连线是从原始 4B 到本模型的变化，红线表示低于原始 4B，浅色底是已知短板。
+它适合**医学教学题库、AI 模型评测和离线研究**。
 
-> [!WARNING]
-> 本项目适合教学题库、模型评测和离线研究，**不能用于真实患者的诊断、分诊或治疗决策**。模型的分诊成绩低于原始 4B，概率也未经校准，详见[已知短板](#已知短板)。
+## 看个例子
 
-## 动态
+> **病例**：患者发热、咳嗽，甲型流感核酸阳性，新冠核酸阴性。
+>
+> **规则**：甲流阳性选甲型流感，新冠阳性选新冠感染，两项都阴性选证据不足。
 
-- **2026-11-16**：更正 1,557 题留出测试的分母，修复数据划分隔离和 Windows 评测问题。[查看详情](CHANGELOG.md)
-- **2026-11-07**：开源代码、完整训练数据和逐题评测记录。
-- **LoRA v1.1.0**：当前版本，全 32 层 LoRA，选用第 5,500 步。
+模型的实际输出：
 
-## 一次调用
+| 选项 | 概率 |
+| --- | ---: |
+| **甲型流感（模型的选择）** | **96.58%** |
+| 新冠感染 | 1.73% |
+| 证据不足 | 1.69% |
 
-`state` 放材料，`instructions` 放判断规则，`criteria` 列出选项。模型只在给定选项里挑一个。
+这道题的答案写在规则里，只用来演示用法。更多场景见[调用示例](examples/README.md)。
 
-```json
-{"id": "teaching_diagnosis",
- "request": {
-   "state": {"clinical_question": "教学病例：患者发热、咳嗽，检测报告为甲型流感病毒核酸阳性，新冠病毒核酸阴性。"},
-   "questions": {"decision": {
-     "type": "choice",
-     "instructions": "本题按检测结果分类：甲型流感核酸阳性选择甲型流感，新冠核酸阳性选择新冠感染，两项均阴性选择证据不足。",
-     "criteria": {"influenza_a": "甲型流感", "covid19": "新冠感染", "insufficient_evidence": "证据不足"}}}}}
-```
+## 效果如何
 
-v1.1.0 的实测输出：
+我们用一套没有参与训练的医疗题来测试，共 **1,514 道题、27 类任务**。
 
-```json
-{"id":"teaching_diagnosis","status":"ok","answer":"influenza_a","probabilities":{"influenza_a":0.9658,"covid19":0.0173,"insufficient_evidence":0.0169}}
-```
+| 模型 | 答对题数 | 正确率 | 运行方式 |
+| --- | ---: | ---: | --- |
+| JEV 1.13 | 1,092 | 72.13% | 线上接口 |
+| DeepSeek V4.1 Flash | 1,076 | 71.07% | 线上接口 |
+| **medical-jev-4b（本项目）** | **1,050** | **69.35%** | **本地显卡** |
+| DeepSeek V4 Pro | 1,041 | 68.76% | 线上接口 |
+| Qwen3.8-27B | 1,008 | 66.58% | 线上接口 |
+| Qwen3.5-4B（训练前的原始模型） | 925 | 61.10% | 本地显卡 |
+| Qwen3.5-9B | 826 | 54.56% | 线上接口，16 题因限流失败 |
 
-这道题的答案由规则直接给出，只用来演示格式。更多场景见[调用示例](examples/README.md)。
+经过训练，模型比原来多答对 **125 题**。
+
+**擅长**：诊断（89%）、检查选择（86%）、并发症（86%）、病因（85%）、用药选择（82%）。
+
+**不擅长**：疾病分期（54%）、分诊（40%）、148 个选项的中医证型题（24%）。
+
+看这张表时有三点要注意：
+
+- 69.35% 需要开启“超多选项”模式：把选项分组，每组留下最可能的 2 个，再逐轮比较。默认设置不支持其中 100 道超多选项的题，这些题算错，正确率是 **67.90%**。
+- 开发过程中我们反复看过这套题，所以它不是严格的盲测。
+- 线上模型和本地模型的作答方式不同，这张表只能作为参考。
 
 ## 快速开始
 
-环境为 Python 3.12、CUDA 12.8 版 PyTorch，已在 Linux / RTX 5090 32 GB 上验证。
+你需要一张 NVIDIA 显卡和 Python 3.12。我们在 Linux、RTX 5090 32 GB 上验证过。第一次运行会自动下载约 9.3 GB 的基础模型。
 
 ```bash
+# 1. 创建环境并安装依赖
 python3 -m venv .venv && source .venv/bin/activate
 pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128
 pip install huggingface-hub==1.33.0
+
+# 2. 下载模型
 hf download JuneYao/medical-jev-4b --revision v1.1.0 --local-dir medical-jev-4b
 pip install -r medical-jev-4b/requirements.txt
+
+# 3. 运行自带的例子
 python medical-jev-4b/predict_choices.py --bundle medical-jev-4b \
   --input medical-jev-4b/examples/scenarios.jsonl
 ```
 
-跑自己的数据时，把 `--input` 换成 JSONL 文件，每行一题，格式同[一次调用](#一次调用)；加 `--output predictions.jsonl` 保存结果。
+### 用自己的题目
+
+新建一个 `my_questions.jsonl`，**每行一道题**。为了方便阅读，下面把一道题分成了多行，实际文件里要写成一行：
+
+```json
+{
+  "id": "题目编号",
+  "request": {
+    "state": {"case": "这里放病例或其他材料"},
+    "questions": {"decision": {
+      "type": "choice",
+      "instructions": "这里写判断规则",
+      "criteria": {"option_a": "选项 A 的内容", "option_b": "选项 B 的内容"}
+    }}
+  }
+}
+```
+
+然后运行：
+
+```bash
+python medical-jev-4b/predict_choices.py --bundle medical-jev-4b \
+  --input my_questions.jsonl --output predictions.jsonl
+```
+
+结果里的 `answer` 是模型选中的选项，`probabilities` 是每个选项的概率。
 
 <details>
-<summary><b>更多用法：Python 调用、已有底座、超过 52 个候选</b></summary>
+<summary><b>更多用法：Python 调用、显存不够、超过 52 个选项</b></summary>
 
 ```python
 import sys; sys.path.insert(0, "medical-jev-4b")
 from jevtrain.inference import ChoicePredictor
+
 model = ChoicePredictor("medical-jev-4b")
-print(model.predict([request]))   # request 即上面 JSON 里的 "request"
+print(model.predict([request]))   # request 就是上面 JSON 里的 "request"
 ```
 
-- 已有底座用 `--base-model` 指定；显存不够加 `--batch-size 1`。
-- 发布包直接打分最多 52 个候选；更多候选用本仓库的 `scripts/predict_choices.py --tournament-above 52`（分块淘汰）。
-- 适配器是自定义的 `jev-lora-v1` 格式，要用随包的 `predict_choices.py` 或 `ChoicePredictor` 加载，不兼容 PEFT。
+- 显存不够：加 `--batch-size 1`。
+- 已经下载过基础模型：用 `--base-model` 指定路径。
+- 超过 52 个选项：使用本仓库的 `scripts/predict_choices.py --tournament-above 52`。这个功能还是实验性的。
+- 模型权重是自定义格式，要用随包的 `predict_choices.py` 或 `ChoicePredictor` 加载，不能直接用 PEFT 加载。
 
 </details>
 
-## 为什么做
+## 不能用来做什么
 
-医疗流程里有很多范围明确的判断：分诊到哪一级、方案有没有禁忌、下一步做什么检查、能不能转介某个试验。这类判断不需要长篇解释，要的是三点：**快、稳、程序能直接读**。
+> [!WARNING]
+> **不要把它用于真实患者的诊断、分诊或治疗决策。** 它的输出不能替代医生的判断。
 
-TypeSafe 的 JEV 把它做成了 API：传入上下文（`state`）和类型化问题，直接返回结构化判断，官方叫它 “System One” 模型。[jev-healthcare-lab](https://github.com/JuneYaooo/jev-healthcare-lab) 用 1,514 道医疗题测过 JEV、DeepSeek 和 Qwen。
+- **不要用它做分诊。** 它的分诊正确率只有 40%，比训练前（55%）还低，而且 90% 的情况都会回答“非紧急就医”，可能漏掉紧急情况。
+- **不要把概率当成真实把握。** 模型说 96% 不代表它有 96% 的可能答对，这个数字不能用作风险评分。
+- **训练数据没有经过临床专家逐条审核。** 数据里的错误可能被模型学到。
+- **它不会解释原因。** 模型只给选项和概率，你无法从输出里看到判断依据。
 
-那么，同样的 Choice 判断，一个开源、本地跑的 4B 模型能做到什么程度？本项目回答的就是这个问题。模型直接接收这个基准的请求格式，在同一套题上比。本项目与 JEV 官方无关联。
+## 技术细节
 
-## 核心思路
+下面的内容面向想了解训练方法或复现结果的读者。
 
-1. **打分，不生成。** 候选项编成 A、B、C…，只读下一个 token 在这几个字母上的概率。一次前向就拿到答案和完整分布，不会冒出非法选项，也不用解析文本。代价是没有解释。
-2. **按任务均衡抽样。** 训练池里 CMB 一个来源就有 195,784 题，直接全训，小任务会被淹没。于是每类任务最多取 3,000 题，通用医学题取 10,000 题，实际训练 44,847 题。
-3. **评测从严。** 训练、开发、测试和外部基准按来源组、精确输入、归一化文本三重隔离；失败和不支持的题一律算错；和原始 4B 逐题配对做 bootstrap。
+<details>
+<summary><b>模型是怎么做的</b></summary>
+
+1. **只打分，不生成文字。** 选项编成 A、B、C…，模型只计算下一个 token 是各字母的概率。一次前向计算就能得到答案和完整概率分布，也不会输出选项以外的内容。
+2. **按任务均衡抽样。** 训练池里 CMB 一个来源就有 195,784 题，全量训练会淹没小任务。因此每类任务最多取 3,000 题，通用医学题取 10,000 题，实际训练 44,847 题。
+3. **严格隔离和计分。** 训练、开发、测试和外部基准按来源组、精确输入、归一化文本隔离；失败和不支持的题都算错；与原始 4B 逐题配对做 bootstrap。
 
 <p align="center"><img src="docs/figures/method.svg" alt="方法总览：数据构建与隔离、训练与选模、一次前向打分推理" width="100%"></p>
 
-**图 2｜方法总览。** **a**，77 个公开题源统一成选择题 JSON，映射到 27 类决策任务；四套数据三重隔离，再按任务抽样。**b**，冻结 Qwen3.5-4B，在全部 32 层上训练 LoRA，损失只算答案字母的 logits；每 500 步在开发集上评测，选出第 5,500 步；发布前与原始 4B 配对比较，留出测试只评一次。**c**，推理时一次前向读出各字母概率并归一化；候选超过 52 个时分块淘汰。
+**a**，77 个公开题源统一成选择题 JSON，映射到 27 类决策任务。**b**，冻结 Qwen3.5-4B，在全部 32 层上训练 LoRA，损失只算答案字母的 logits；每 500 步在开发集上评测，选出第 5,500 步。**c**，推理时读出各字母概率并归一化；选项超过 52 个时分组筛选。
 
-## 效果
-
-| 模型 | 答对 / 1,514 | 准确率 | 作答方式 |
-| --- | ---: | ---: | --- |
-| JEV 1.13（线上服务存档） | 1,092 | 72.13% | API 生成 |
-| DeepSeek V4.1 Flash | 1,076 | 71.07% | API 生成，关闭思考 |
-| **medical-jev-4b v1.1.0** | **1,050** | **69.35%** | 本地选项打分 |
-| DeepSeek V4 Pro | 1,041 | 68.76% | API 生成，关闭思考 |
-| Qwen3.8-27B | 1,008 | 66.58% | API 生成 |
-| 原始 Qwen3.5-4B | 925 | 61.10% | 本地选项打分 |
-| Qwen3.5-9B | 826 | 54.56% | API 生成，16 题限流失败计错 |
-
-读这张表时请注意：
-
-- **基准**：[jev-healthcare-lab](https://github.com/JuneYaooo/jev-healthcare-lab) `medical_decision_v1`，与训练数据三重隔离。开发中反复用它看问题，所以**不是盲测**。
-- **计分**：无效回答、失败、不支持都算错。148 个候选的 100 道中医证型题用分块淘汰；如果直接算错（发布包默认），本模型是 1,028（67.90%），原始 4B 是 907（59.91%）。
-- **可比性**：API 模型是生成作答，本模型是本地打分，服务条件也不同，对比仅供参考。参考模型的原始记录在 jev-healthcare-lab 的 `results/clinical-v1`。
-- **留出测试**：与训练同分布的 1,557 题上，本模型答对 1,307 题（83.94%），原始 4B 答对 1,174 题（75.40%），差值 +8.54 pp。这是将原记录中各漏计的 2 道不支持题按错误纳入分母后的更正，不是重新运行模型；更正后的置信区间因缺少逐题分组记录无法重算。训练池含这些题的上游来源，不能算盲测，详见[完整评测及原始记录](docs/EVALUATION.md#训练分布内留出测试)。
+</details>
 
 <details>
-<summary><b>逐任务准确率（≥100 题的 13 类任务，%）</b></summary>
+<summary><b>完整评测口径</b></summary>
+
+<p align="center"><img src="docs/figures/results.svg" alt="评测结果：外部基准总体准确率与逐任务准确率" width="100%"></p>
+
+- **基准**：[jev-healthcare-lab](https://github.com/JuneYaooo/jev-healthcare-lab) `medical_decision_v1`，与训练数据隔离，但开发中用于诊断问题，不是盲测。
+- **比训练前提高多少**：正确率提高 8.26 个百分点。考虑题目抽样带来的波动，提升幅度大约在 5.74 到 10.88 个百分点之间（95% 置信区间）。
+- **默认设置的成绩**：默认最多支持 52 个选项，超过的题直接算错。此时本模型答对 1,028 题（67.90%），原始模型答对 907 题（59.91%）。
+- **速度**：RTX 5090 默认设置下约 54 题/秒（1,414 题用时约 26 秒）。开启超多选项模式并逐题运行时，1,514 题约 192 秒，其中约 30 秒用于加载模型。
+- **概率准不准**：没有校准。模型给出的把握和实际正确率平均相差约 13 个百分点（ECE 0.13）。
+- **留出测试**：与训练同分布的 1,557 题上，本模型答对 1,307 题（83.94%），原始 4B 答对 1,174 题（75.40%），差值 +8.54 个百分点。这是将原记录中各漏计的 2 道不支持题按错误纳入分母后的更正，未重新运行模型，更正后的置信区间无法重算。训练池含这些题的上游来源，不能算盲测，详见[完整评测](docs/EVALUATION.md#训练分布内留出测试)。
+- **参考模型**：API 模型为生成作答，DeepSeek 关闭思考，JEV 1.13 为线上服务存档；原始记录在 jev-healthcare-lab 的 `results/clinical-v1`。
 
 | 任务 | 原始 4B | **本模型** | DeepSeek Flash | DeepSeek Pro | JEV 1.13 |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -149,44 +187,28 @@ TypeSafe 的 JEV 把它做成了 API：传入上下文（`state`）和类型化�
 | 分诊 | 55 | **40** | 61 | 57 | 63 |
 | 中医证型（148 候选） | 18 | **24** | 37 | 30 | 38 |
 
-全部 27 类见 [docs/EVALUATION.md](docs/EVALUATION.md#逐任务成绩)。
+短板原因：分诊的训练标签多由医生回复映射而来，以“非紧急就医”为主；模拟病例诊断有 49 个选项，超过训练时见过的最多 26 个；中医证型有 148 个选项，只能分组筛选；疾病分期依赖细致的分期标准。全部 27 类见[逐任务成绩](docs/EVALUATION.md#逐任务成绩)。
 
 </details>
 
-## 已知短板
-
-| 任务 | 现状 | 原因 |
-| --- | --- | --- |
-| 分诊 | 40/100，低于原始 4B；90% 预测为“非紧急就医” | 训练标签多由医生回复映射而来，以“非紧急就医”为主 |
-| 模拟病例诊断 | 60%，落后 DeepSeek Flash 17 个百分点 | 49 个候选超过训练上限 26，训练里没有这类题 |
-| 中医证型 | 24%，所有模型都低于 40% | 148 个候选，只能分块淘汰 |
-| 疾病分期 | 54% | 题目依赖细致的分期标准 |
-
-分诊为什么反而比原始 4B 低？训练标签大多是“非紧急就医”，模型学会了偏向这一类。所以**不要用它做分诊**。另外概率没有校准（基准 ECE 0.13），不能直接当风险或复核阈值。
-
-## 能力与边界
+<details>
+<summary><b>模型规格</b></summary>
 
 | 项目 | 说明 |
 | --- | --- |
+| 基础模型 | Qwen3.5-4B |
+| 适配器 | 全 32 层 LoRA（rank 16 / alpha 32，第 5,500 步），约 130 MB |
+| 权重 SHA-256 | `88c64b00…25b4b6` |
 | 任务 | 诊断、病因、并发症、检查、治疗、用药、禁忌、药物基因组、分诊、消息优先级、护理、营养、康复、中医证型 / 病机等 27 类 |
-| 候选数 | 训练覆盖 2–26 个；发布包直接打分最多 52 个；更多候选可分块淘汰（实验性） |
-| 长度 | 训练 1,536 token；发布包 8,192 token |
+| 选项数 | 训练时见过 2–26 个；默认最多支持 52 个；更多选项需开启超多选项模式（实验性） |
+| 输入长度 | 训练时最长 1,536 token；使用时最长 8,192 token |
 | 语种 | 中文为主，含英、日、韩、葡、西、土等 |
-| 速度 | RTX 5090 发布包默认设置：直接打分的 1,414 题约 26 秒；批量 1、含分块淘汰时 1,514 题约 192 秒（含约 30 秒加载） |
-| 部署 | FP16 单卡；首次运行自动下载约 9.3 GB 底座，并校验版本与哈希 |
+| 部署 | FP16 单卡，自动校验基础模型版本与哈希 |
 
-## 开源内容
+</details>
 
-| 内容 | 位置 | 说明 |
-| --- | --- | --- |
-| 模型 | [LoRA v1.1.0](https://huggingface.co/JuneYao/medical-jev-4b/tree/v1.1.0) | 全 32 层 LoRA（rank 16 / alpha 32，第 5,500 步），约 130 MB，附独立推理代码；SHA-256 `88c64b00…25b4b6` |
-| 数据 | [medical-jev-4b-data](https://huggingface.co/datasets/JuneYao/medical-jev-4b-data) | 训练池 242,921 题（77 个来源），以及开发集和留出测试全文；每条保留来源、上游 ID 与许可 |
-| 代码 | `src/jevtrain`、`scripts/` | 数据构建、训练、评测与配对比较 |
-| 评测记录 | [`docs/results/`](docs/results/README.md) | 外部基准与留出测试的逐题预测 |
-
-数据有一点要说明：训练原始文件已丢失，公开的是重建的训练池。上游来源相同，各任务规模基本一致，但不逐条相同。各来源许可以上游为准，使用前请自行核对。
-
-## 训练复现
+<details>
+<summary><b>复现训练</b></summary>
 
 ```bash
 pip install -e . && pip install -r requirements-train.txt
@@ -197,22 +219,26 @@ jev eval  --config configs/jev/release/train.json --checkpoint runs/train/best.s
   --tournament-above 52 --batch-size 1 --output runs/bench
 ```
 
-抽样规则和超参数与当前版本一致，数据换成公开的重建训练池。RTX 5090 上约 1.5 小时。环境、自检和每一步的细节见[训练方法](docs/TRAINING.md)；README 的两张图由 `python scripts/make_readme_figures.py` 生成。
+RTX 5090 上训练约 1.5 小时。抽样规则和超参数与当前版本一致，数据换成公开的重建训练池。训练原始文件已丢失，重建数据的上游来源相同、各任务规模基本一致，但不逐条相同。README 的图由 `python scripts/make_readme_figures.py` 生成。
 
-## 文档
+</details>
 
-| 想了解 | 文档 |
+<details>
+<summary><b>项目背景</b></summary>
+
+TypeSafe 的 JEV 提供一种结构化判断 API：传入上下文和类型化问题，直接返回判断结果。本项目想回答：同样的选择题判断，一个开源、本地运行的 4B 模型能做到什么程度？模型直接接收 [jev-healthcare-lab](https://github.com/JuneYaooo/jev-healthcare-lab) 基准的请求格式。本项目与 JEV 官方无关联。
+
+</details>
+
+## 下载与文档
+
+| 内容 | 链接 |
 | --- | --- |
-| 评测集、指标、逐任务成绩 | [EVALUATION](docs/EVALUATION.md) |
-| 训练流程、超参数、选模与发布门槛 | [TRAINING](docs/TRAINING.md) |
-| 数据来源、隔离与局限 | [DATA](docs/DATA.md) |
-| 输入格式与运行范围 | [INPUT_LIMIT_CHECK](docs/INPUT_LIMIT_CHECK.md) |
-| 模型卡与发布报告 | [MODEL_CARD](docs/MODEL_CARD_V1.md) · [RELEASE](docs/RELEASE_V1.md) |
-| 机器可读结果 | [docs/results](docs/results/README.md) |
-
-## 免责声明
-
-本模型和数据只用于研究、教学与评测。训练标签未经临床专家逐条审核，概率未经校准；输出不能替代专业医疗判断，也不应用于真实患者的诊断、分诊或治疗决策。
+| 模型 | [Hugging Face](https://huggingface.co/JuneYao/medical-jev-4b/tree/v1.1.0) |
+| 数据（242,921 题，77 个来源） | [Hugging Face](https://huggingface.co/datasets/JuneYao/medical-jev-4b-data) |
+| 评测基准 | [jev-healthcare-lab](https://github.com/JuneYaooo/jev-healthcare-lab) |
+| 逐题结果 | [docs/results](docs/results/README.md) |
+| 详细文档 | [评测](docs/EVALUATION.md) · [训练](docs/TRAINING.md) · [数据](docs/DATA.md) · [输入范围](docs/INPUT_LIMIT_CHECK.md) · [模型卡](docs/MODEL_CARD_V1.md) · [发布报告](docs/RELEASE_V1.md) · [版本记录](CHANGELOG.md) |
 
 ## 引用
 
@@ -227,4 +253,4 @@ jev eval  --config configs/jev/release/train.json --checkpoint runs/train/best.s
 
 ## 许可
 
-代码与 LoRA 适配器采用 [MIT](LICENSE)；底座 Qwen3.5-4B 采用 [Apache-2.0](https://huggingface.co/Qwen/Qwen3.5-4B/blob/main/LICENSE)。训练数据各来源保留其上游许可，代码许可不授予第三方数据使用权。
+代码与模型适配器采用 [MIT](LICENSE)，基础模型 Qwen3.5-4B 采用 [Apache-2.0](https://huggingface.co/Qwen/Qwen3.5-4B/blob/main/LICENSE)。训练数据沿用各来源的上游许可，使用前请自行核对。
