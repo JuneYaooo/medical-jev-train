@@ -2,7 +2,7 @@
 
 [返回首页](../README.md)
 
-完整数据公开在 [Hugging Face 数据集](https://huggingface.co/datasets/JuneYao/medical-jev-4b-data)，数据卡列出每类任务和每个来源的题数与声明许可。
+完整数据公开在 [Hugging Face 数据集](https://huggingface.co/datasets/JuneYao/medical-jev-data)，数据卡列出每类任务和每个来源的题数与声明许可。
 
 | 文件 | 题数 | 用途 |
 | --- | ---: | --- |

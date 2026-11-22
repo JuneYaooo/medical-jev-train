@@ -10,7 +10,7 @@ Python 3.12、PyTorch 2.8.0（CUDA 12.8）、Transformers 5.19+（支持 Qwen3.5
 
 ```bash
 pip install -e . && pip install -r requirements-train.txt
-hf download --repo-type dataset JuneYao/medical-jev-4b-data --local-dir work/data/release
+hf download --repo-type dataset JuneYao/medical-jev-data --local-dir work/data/release
 hf download Qwen/Qwen3.5-4B --revision 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --local-dir work/models/Qwen3.5-4B
 jev import-benchmark --benchmark <jev-healthcare-lab>/benchmarks/medical_decision_v1 --output work/benchmark/medical_decision_v1.jsonl
 python scripts/build_clean_data.py .

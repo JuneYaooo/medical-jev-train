@@ -1,29 +1,36 @@
 <div align="center">
 
-# medical-jev-4b
+# medical-JEV-TRAIN
 
-**一个能在自己显卡上运行的医疗选择题模型**
+**非官方、开源、可本地运行的医疗版 JEV 模型**
 
-给它一段病例和几个选项，它会选出一个答案，并告诉你每个选项的概率。
+给它一段病例和几个选项，它返回一个答案和每个选项的概率。一张显卡就能跑。
+
+<sub>JEV 是 TypeSafe 的结构化判断 API。本项目沿用这种“传入材料和问题，直接返回判断”的用法，与 JEV / TypeSafe 官方无关联。</sub>
 
 [![Model](https://img.shields.io/badge/🤗_模型-v1.2.0-yellow)](https://huggingface.co/JuneYao/medical-jev-4b/tree/v1.2.0)
-[![Dataset](https://img.shields.io/badge/🤗_数据-242,921_题-yellow)](https://huggingface.co/datasets/JuneYao/medical-jev-4b-data)
+[![Dataset](https://img.shields.io/badge/🤗_数据-242,921_题-yellow)](https://huggingface.co/datasets/JuneYao/medical-jev-data)
 [![License](https://img.shields.io/badge/License-Apache_2.0-green)](LICENSE)
+[![LINUX.DO](https://img.shields.io/badge/社区-LINUX.DO-blue)](https://linux.do/)
 [![Not for clinical use](https://img.shields.io/badge/⚠️_不用于临床决策-critical)](#不能用来做什么)
 
 **简体中文** · [English](README_en.md)
 
-[看个例子](#看个例子) · [效果如何](#效果如何) · [快速开始](#快速开始) · [不能用来做什么](#不能用来做什么) · [技术细节](#技术细节)
+[模型](#模型) · [看个例子](#看个例子) · [效果如何](#效果如何) · [快速开始](#快速开始) · [不能用来做什么](#不能用来做什么) · [技术细节](#技术细节) · [社区](#社区)
 
 </div>
 
-## 这是什么
+## 为什么做这个
 
-很多医学问题可以写成选择题：这个病例最可能是什么病？这个方案有没有禁忌？下一步该做什么检查？
+很多医学判断可以写成选择题：最可能是什么病，方案有没有禁忌，下一步做什么检查。这类任务不需要模型写长文，需要的是**答案可解析、概率可读取、能离线运行、成绩可复查**。
 
-medical-jev-4b 专门做这类题。它只从你给的选项里选，不写长篇解释，所以速度快，结果也方便程序直接读取。模型不需要联网调用付费接口，一张显卡就能运行。
+这个仓库提供可直接下载使用的模型 **medical-jev-4b**，也包含完整流程：数据去泄漏、LoRA 训练、外部基准评测、其他领域回归检查和带哈希校验的发布包。适合**医学教学题库、AI 模型评测和离线研究**。
 
-它适合**医学教学题库、AI 模型评测和离线研究**。
+## 模型
+
+| 模型 | 基础模型 | 外部基准 | 留出测试 | 运行要求 | 下载 |
+| --- | --- | ---: | ---: | --- | --- |
+| **medical-jev-4b** v1.2.0 | Qwen3.5-4B | **68.56%** | **80.92%** | 单张 NVIDIA 显卡 | [Hugging Face](https://huggingface.co/JuneYao/medical-jev-4b/tree/v1.2.0) |
 
 ## 看个例子
 
@@ -31,9 +38,7 @@ medical-jev-4b 专门做这类题。它只从你给的选项里选，不写长�
 >
 > **规则**：甲流阳性选甲型流感，新冠阳性选新冠感染，两项都阴性选证据不足。
 
-模型的实际输出：
-
-| 选项 | 概率 |
+| 选项 | 模型给出的概率 |
 | --- | ---: |
 | **甲型流感（模型的选择）** | **97.43%** |
 | 新冠感染 | 1.53% |
@@ -43,94 +48,103 @@ medical-jev-4b 专门做这类题。它只从你给的选项里选，不写长�
 
 ## 效果如何
 
-我们用一套与训练数据隔离的外部医疗题来测试，共 **1,514 道题、27 类任务**。
+外部基准共 **1,514 道题、27 类任务**。训练后比原始模型多答对 **113 题**。
 
 | 模型 | 答对题数 | 正确率 | 运行方式 |
 | --- | ---: | ---: | --- |
 | JEV 1.13 | 1,092 | 72.13% | 线上接口 |
 | DeepSeek V4.1 Flash | 1,076 | 71.07% | 线上接口 |
 | DeepSeek V4 Pro | 1,041 | 68.76% | 线上接口 |
-| **medical-jev-4b（本项目）** | **1,038** | **68.56%** | **本地显卡** |
+| **medical-jev-4b** | **1,038** | **68.56%** | **本地显卡** |
 | Qwen3.8-27B | 1,008 | 66.58% | 线上接口 |
-| Qwen3.5-4B（训练前的原始模型） | 925 | 61.10% | 本地显卡 |
+| Qwen3.5-4B（训练前） | 925 | 61.10% | 本地显卡 |
 
-经过训练，模型比原来多答对 **113 题**。另一组 1,557 道留出题上，正确率从 75.47% 提高到 **80.92%**（+5.46 个百分点，95% 区间 3.47 到 7.60）。
+- **留出测试**：1,557 题上从 75.47% 提高到 **80.92%**（+5.46 个百分点，95% 区间 3.47 到 7.60）。
+- **擅长**：检查选择（87%）、病因（86%）、诊断（85%）、并发症（81%）、用药选择（79%）。
+- **不擅长**：药物基因组建议（47%）、分诊（51%）、148 个选项的中医证型题（27%）。
+- **其他领域**：MMLU / CMMLU 的 124 个学科在多重比较校正后没有显著退步。非医学学科平均提高 5.45 个百分点，说明部分提升来自通用答题能力。
 
-**擅长**：检查选择（87%）、病因（86%）、诊断（85%）、并发症（81%）、用药选择（79%）。
-
-**不擅长**：药物基因组建议（47%）、分诊（51%）、148 个选项的中医证型题（27%）。
-
-**其他领域**：在 MMLU / CMMLU 的 124 个学科上，多重比较校正后没有学科显著退步，非医学学科平均提高 5.45 个百分点。这说明部分提升来自通用答题能力，不全是医学知识。
-
-看这张表时有三点要注意：
-
-- 68.56% 需要开启“超多选项”模式：把选项分组，每组留下最可能的 2 个，再逐轮比较。默认设置不支持其中 100 道超多选项的题，这些题算错，正确率是 **66.78%**。
-- 开发过程中我们反复看过外部基准，发布前也分析过留出题的错题，所以两者都不是严格的盲测。
-- 线上模型和本地模型的作答方式不同，这张表只能作为参考。
+> [!NOTE]
+> 68.56% 需要开启超多选项模式。默认设置不支持其中 100 道题，这些题算错，正确率为 **66.78%**。外部基准和留出题在开发中都被分析过，不是严格盲测。线上模型和本地模型作答方式不同，表格仅供参考。
 
 ## 快速开始
 
-你需要一张 NVIDIA 显卡和 Python 3.12。我们在 Linux、RTX 5090 32 GB 上验证过。第一次运行会自动下载约 9.3 GB 的基础模型。
+**你需要**：一张 NVIDIA 显卡、Python 3.12，以及约 10 GB 磁盘空间。我们在 Linux、RTX 5090 32 GB 上验证过。
+
+### 1. 安装并下载模型
 
 ```bash
-# 1. 创建环境并安装依赖
 python3 -m venv .venv && source .venv/bin/activate
 pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128
 pip install huggingface-hub==1.33.0
 
-# 2. 下载模型
 hf download JuneYao/medical-jev-4b --revision v1.2.0 --local-dir medical-jev-4b
 pip install -r medical-jev-4b/requirements.txt
-
-# 3. 运行自带的例子
-python medical-jev-4b/predict_choices.py --bundle medical-jev-4b \
-  --input medical-jev-4b/examples/scenarios.jsonl
 ```
 
-### 用自己的题目
+第一次运行时会自动下载约 9.3 GB 的基础模型 Qwen3.5-4B，并校验版本和哈希。
 
-新建一个 `my_questions.jsonl`，**每行一道题**。为了方便阅读，下面把一道题分成了多行，实际文件里要写成一行：
+### 2. 写一道题
 
-```json
-{
-  "id": "题目编号",
-  "request": {
-    "state": {"case": "这里放病例或其他材料"},
-    "questions": {"decision": {
-      "type": "choice",
-      "instructions": "这里写判断规则",
-      "criteria": {"option_a": "选项 A 的内容", "option_b": "选项 B 的内容"}
-    }}
-  }
-}
+输入文件是 JSONL，**每行一道题**：
+
+```bash
+cat > my_questions.jsonl <<'EOF'
+{"id":"q1","request":{"state":{"case":"患者发热、咳嗽，甲型流感核酸阳性，新冠核酸阴性。"},"questions":{"decision":{"type":"choice","instructions":"根据检测结果选择最可能的诊断。","criteria":{"flu_a":"甲型流感","covid":"新冠感染","unknown":"证据不足"}}}}}
+EOF
 ```
 
-然后运行：
+| 字段 | 含义 |
+| --- | --- |
+| `id` | 题目编号，会原样出现在结果里 |
+| `state` | 病例、检查结果等材料，键名可以自己定 |
+| `instructions` | 要模型判断什么，以及判断规则 |
+| `criteria` | 候选项，格式为 `选项键: 选项内容`，默认支持 2–52 个 |
+
+### 3. 运行
 
 ```bash
 python medical-jev-4b/predict_choices.py --bundle medical-jev-4b \
   --input my_questions.jsonl --output predictions.jsonl
+cat predictions.jsonl
 ```
 
-结果里的 `answer` 是模型选中的选项，`probabilities` 是每个选项的概率。
+### 4. 读结果
 
-<details>
-<summary><b>更多用法：Python 调用、显存不够、超过 52 个选项</b></summary>
+```json
+{"id": "q1", "status": "ok", "answer": "flu_a", "probabilities": {"flu_a": 0.9739, "covid": 0.0144, "unknown": 0.0117}}
+```
+
+`answer` 是模型选中的选项键，`probabilities` 是各选项的概率（这里保留四位小数）。`status` 为 `ok` 表示这道题正常完成。概率没有校准，只适合比较选项，不能当作风险评分。
+
+### 在 Python 里调用
 
 ```python
-import sys; sys.path.insert(0, "medical-jev-4b")
+import sys
+sys.path.insert(0, "medical-jev-4b")
 from jevtrain.inference import ChoicePredictor
 
-model = ChoicePredictor("medical-jev-4b")
-print(model.predict([request]))   # request 就是上面 JSON 里的 "request"
+model = ChoicePredictor("medical-jev-4b")  # 已有基础模型时，第二个参数传路径
+request = {
+    "state": {"case": "患者发热、咳嗽，甲型流感核酸阳性，新冠核酸阴性。"},
+    "questions": {"decision": {
+        "type": "choice",
+        "instructions": "根据检测结果选择最可能的诊断。",
+        "criteria": {"flu_a": "甲型流感", "covid": "新冠感染", "unknown": "证据不足"},
+    }},
+}
+result = model.predict([request])[0]
+print(result["answer"], result["probabilities"])
 ```
 
-- 显存不够：加 `--batch-size 1`。
-- 已经下载过基础模型：用 `--base-model` 指定路径。
-- 超过 52 个选项：使用本仓库的 `scripts/predict_choices.py --tournament-above 52`。这个功能还是实验性的。
-- 模型权重是自定义格式，要用随包的 `predict_choices.py` 或 `ChoicePredictor` 加载，不能直接用 PEFT 加载。
+### 常见问题
 
-</details>
+| 情况 | 做法 |
+| --- | --- |
+| 显存不够 | 加 `--batch-size 1` |
+| 已下载过基础模型 | 加 `--base-model /path/to/Qwen3.5-4B` |
+| 超过 52 个选项 | 用本仓库的 `scripts/predict_choices.py --tournament-above 52`（实验性） |
+| 想用 PEFT 加载 | 不支持。权重是自定义格式，请用 `predict_choices.py` 或 `ChoicePredictor` |
 
 ## 不能用来做什么
 
@@ -138,7 +152,7 @@ print(model.predict([request]))   # request 就是上面 JSON 里的 "request"
 > **不要把它用于真实患者的诊断、分诊或治疗决策。** 它的输出不能替代医生的判断。
 
 - **不要用它做分诊。** 它的分诊正确率只有 51%，低于训练前（55%）。它在信息不足的第一轮对话里很少追问，52 题只答对 16 题，可能漏掉紧急情况。
-- **不要把概率当成真实把握。** 模型说 97% 不代表它有 96% 的可能答对，这个数字不能用作风险评分。
+- **不要把概率当成真实把握。** 模型说 97% 不代表它有 97% 的可能答对，这个数字不能用作风险评分。
 - **训练数据没有经过临床专家逐条审核。** 数据里的错误可能被模型学到。
 - **它不会解释原因。** 模型只给选项和概率，你无法从输出里看到判断依据。
 
@@ -212,7 +226,7 @@ print(model.predict([request]))   # request 就是上面 JSON 里的 "request"
 
 ```bash
 pip install -e . && pip install -r requirements-train.txt
-hf download --repo-type dataset JuneYao/medical-jev-4b-data --local-dir work/data/release
+hf download --repo-type dataset JuneYao/medical-jev-data --local-dir work/data/release
 # 另需按 docs/EVALUATION.md 生成 work/benchmark/medical_decision_v1.jsonl
 python scripts/build_clean_data.py .
 jev train --config configs/jev/release/train.json --output runs/train
@@ -232,15 +246,19 @@ TypeSafe 的 JEV 提供一种结构化判断 API：传入上下文和类型化�
 
 </details>
 
-## 下载与文档
+## 资源
 
 | 内容 | 链接 |
 | --- | --- |
 | 模型 | [Hugging Face](https://huggingface.co/JuneYao/medical-jev-4b/tree/v1.2.0) |
-| 数据（242,921 题，77 个来源） | [Hugging Face](https://huggingface.co/datasets/JuneYao/medical-jev-4b-data) |
+| 数据（242,921 题，77 个来源） | [Hugging Face](https://huggingface.co/datasets/JuneYao/medical-jev-data) |
 | 评测基准 | [jev-healthcare-lab](https://github.com/JuneYaooo/jev-healthcare-lab) |
 | 逐题结果 | [docs/results](docs/results/README.md) |
 | 详细文档 | [评测](docs/EVALUATION.md) · [训练](docs/TRAINING.md) · [数据](docs/DATA.md) · [输入范围](docs/INPUT_LIMIT_CHECK.md) · [模型卡](docs/MODEL_CARD_V1.md) · [发布报告](docs/RELEASE_V1.md) · [版本记录](CHANGELOG.md) |
+
+## 社区
+
+欢迎到 [LINUX.DO](https://linux.do/) 交流使用体验和训练经验。Bug 和功能建议请提交 [Issues](https://github.com/JuneYaooo/medical-JEV-TRAIN/issues)。
 
 ## 许可
 

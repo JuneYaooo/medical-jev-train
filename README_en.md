@@ -1,29 +1,36 @@
 <div align="center">
 
-# medical-jev-4b
+# medical-JEV-TRAIN
 
-**A medical multiple-choice model that runs on your own GPU**
+**An unofficial, open-source medical JEV model you can run locally**
 
-Give it a case and a few options. It picks one answer and tells you the probability of each option.
+Give it a case and a few options. It returns one answer and the probability of each option, on a single GPU.
+
+<sub>JEV is TypeSafe's structured judgment API. This project follows the same idea of passing in material and questions and getting a judgment back. It is not affiliated with JEV or TypeSafe.</sub>
 
 [![Model](https://img.shields.io/badge/🤗_Model-v1.2.0-yellow)](https://huggingface.co/JuneYao/medical-jev-4b/tree/v1.2.0)
-[![Dataset](https://img.shields.io/badge/🤗_Dataset-242,921_questions-yellow)](https://huggingface.co/datasets/JuneYao/medical-jev-4b-data)
+[![Dataset](https://img.shields.io/badge/🤗_Dataset-242,921_questions-yellow)](https://huggingface.co/datasets/JuneYao/medical-jev-data)
 [![License](https://img.shields.io/badge/License-Apache_2.0-green)](LICENSE)
+[![LINUX.DO](https://img.shields.io/badge/Community-LINUX.DO-blue)](https://linux.do/)
 [![Not for clinical use](https://img.shields.io/badge/⚠️_Not_for_clinical_use-critical)](#what-not-to-use-it-for)
 
 [简体中文](README.md) · **English**
 
-[Example](#example) · [How Good Is It](#how-good-is-it) · [Quick Start](#quick-start) · [What Not to Use It For](#what-not-to-use-it-for) · [Technical Details](#technical-details)
+[Models](#models) · [Example](#example) · [How Good Is It](#how-good-is-it) · [Quick Start](#quick-start) · [What Not to Use It For](#what-not-to-use-it-for) · [Technical Details](#technical-details) · [Community](#community)
 
 </div>
 
-## What Is This
+## Why This Exists
 
-Many medical questions can be written as multiple choice. What is the most likely diagnosis? Is this treatment contraindicated? Which test should come next?
+Many medical judgments can be written as multiple choice: the likely diagnosis, a contraindication, the next test. These tasks don't need long prose. They need **parseable answers, readable probabilities, offline use, and results that can be audited**.
 
-medical-jev-4b is built for this kind of question. It only chooses from the options you give it and doesn't write long explanations, so it is fast and its results are easy for programs to read. It needs no paid online API and runs on a single GPU.
+This repository provides the ready-to-use **medical-jev-4b** model and the full pipeline: leakage removal, LoRA training, external benchmarking, regression checks on other domains, and release bundles with hash verification. It is intended for **medical teaching question banks, AI model evaluation, and offline research**.
 
-It is intended for **medical teaching question banks, AI model evaluation, and offline research**.
+## Models
+
+| Model | Base | External benchmark | Held-out test | Requires | Download |
+| --- | --- | ---: | ---: | --- | --- |
+| **medical-jev-4b** v1.2.0 | Qwen3.5-4B | **68.56%** | **80.92%** | One NVIDIA GPU | [Hugging Face](https://huggingface.co/JuneYao/medical-jev-4b/tree/v1.2.0) |
 
 ## Example
 
@@ -31,9 +38,7 @@ It is intended for **medical teaching question banks, AI model evaluation, and o
 >
 > **Rule**: If influenza A is positive, choose influenza A. If COVID-19 is positive, choose COVID-19. If both are negative, choose insufficient evidence.
 
-The model's actual output:
-
-| Option | Probability |
+| Option | Model probability |
 | --- | ---: |
 | **Influenza A (model's choice)** | **97.43%** |
 | COVID-19 | 1.53% |
@@ -43,94 +48,103 @@ The rule contains the answer, so this example only shows how the model is used. 
 
 ## How Good Is It
 
-We tested it on an external set of medical questions isolated from the training data: **1,514 questions across 27 task types**.
+The external benchmark has **1,514 questions across 27 task types**. Training added **113 correct answers** over the original model.
 
 | Model | Correct | Accuracy | Runs on |
 | --- | ---: | ---: | --- |
 | JEV 1.13 | 1,092 | 72.13% | Online API |
 | DeepSeek V4.1 Flash | 1,076 | 71.07% | Online API |
 | DeepSeek V4 Pro | 1,041 | 68.76% | Online API |
-| **medical-jev-4b (this project)** | **1,038** | **68.56%** | **Local GPU** |
+| **medical-jev-4b** | **1,038** | **68.56%** | **Local GPU** |
 | Qwen3.8-27B | 1,008 | 66.58% | Online API |
-| Qwen3.5-4B (original model before training) | 925 | 61.10% | Local GPU |
+| Qwen3.5-4B (before training) | 925 | 61.10% | Local GPU |
 
-Training helped the model answer **113 more questions** correctly. On a separate 1,557-question held-out set, accuracy rose from 75.47% to **80.92%** (+5.46 points, 95% CI 3.47 to 7.60).
+- **Held-out test**: 75.47% to **80.92%** on 1,557 questions (+5.46 points, 95% CI 3.47 to 7.60).
+- **Strong at**: choosing tests (87%), etiology (86%), diagnosis (85%), complications (81%), medication choice (79%).
+- **Weak at**: pharmacogenomic recommendations (47%), triage (51%), TCM syndrome questions with 148 options (27%).
+- **Other domains**: No MMLU / CMMLU subject out of 124 got significantly worse after multiple-comparison correction. Non-medical subjects gained 5.45 points on average, so part of the gain is general test-taking ability.
 
-**Strong at**: choosing tests (87%), etiology (86%), diagnosis (85%), complications (81%), and medication choice (79%).
-
-**Weak at**: pharmacogenomic recommendations (47%), triage (51%), and traditional Chinese medicine syndrome questions with 148 options (27%).
-
-**Other domains**: Across 124 MMLU / CMMLU subjects, no subject got significantly worse after multiple-comparison correction, and non-medical subjects improved by 5.45 points on average. Part of the gain is therefore general test-taking ability rather than medical knowledge.
-
-Keep three things in mind when reading this table:
-
-- The 68.56% score requires the "many options" mode, which splits options into groups, keeps the 2 most likely from each, and compares them round by round. The default settings don't support 100 of the questions, which have too many options. Those count as wrong, and accuracy is **66.78%**.
-- We looked at the external benchmark repeatedly during development and analyzed held-out errors before release, so neither is a strict blind test.
-- Online and local models answer in different ways, so treat this table as a rough reference.
+> [!NOTE]
+> The 68.56% score requires "many options" mode. The default settings don't support 100 of the questions, which count as wrong, giving **66.78%**. The benchmark and held-out set were both analyzed during development, so neither is a strict blind test. Online and local models answer differently, so treat this table as a rough reference.
 
 ## Quick Start
 
-You need an NVIDIA GPU and Python 3.12. We verified this on Linux with an RTX 5090 32 GB. The first run automatically downloads a base model of about 9.3 GB.
+**You need** an NVIDIA GPU, Python 3.12, and about 10 GB of disk space. We verified this on Linux with an RTX 5090 32 GB.
+
+### 1. Install and download the model
 
 ```bash
-# 1. Create an environment and install dependencies
 python3 -m venv .venv && source .venv/bin/activate
 pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128
 pip install huggingface-hub==1.33.0
 
-# 2. Download the model
 hf download JuneYao/medical-jev-4b --revision v1.2.0 --local-dir medical-jev-4b
 pip install -r medical-jev-4b/requirements.txt
-
-# 3. Run the included examples
-python medical-jev-4b/predict_choices.py --bundle medical-jev-4b \
-  --input medical-jev-4b/examples/scenarios.jsonl
 ```
 
-### Use Your Own Questions
+The first run automatically downloads the 9.3 GB Qwen3.5-4B base model and checks its version and hashes.
 
-Create `my_questions.jsonl` with **one question per line**. The question below is split across lines for readability, but in the file it must be on a single line:
+### 2. Write a question
 
-```json
-{
-  "id": "question-id",
-  "request": {
-    "state": {"case": "Put the case or other material here"},
-    "questions": {"decision": {
-      "type": "choice",
-      "instructions": "Write the decision rule here",
-      "criteria": {"option_a": "Text of option A", "option_b": "Text of option B"}
-    }}
-  }
-}
+The input file is JSONL, with **one question per line**:
+
+```bash
+cat > my_questions.jsonl <<'EOF'
+{"id":"q1","request":{"state":{"case":"A patient has fever and cough. Influenza A PCR is positive and COVID-19 PCR is negative."},"questions":{"decision":{"type":"choice","instructions":"Choose the most likely diagnosis based on the test results.","criteria":{"flu_a":"Influenza A","covid":"COVID-19","unknown":"Insufficient evidence"}}}}}
+EOF
 ```
 
-Then run:
+| Field | Meaning |
+| --- | --- |
+| `id` | Question ID, copied to the result |
+| `state` | The case, test results, or other material. You choose the key names |
+| `instructions` | What the model should decide, and any rules |
+| `criteria` | The options, as `option_key: option text`. The default supports 2–52 |
+
+### 3. Run
 
 ```bash
 python medical-jev-4b/predict_choices.py --bundle medical-jev-4b \
   --input my_questions.jsonl --output predictions.jsonl
+cat predictions.jsonl
 ```
 
-In the results, `answer` is the chosen option and `probabilities` holds the probability of each option.
+### 4. Read the result
 
-<details>
-<summary><b>More usage: Python, low VRAM, more than 52 options</b></summary>
+```json
+{"id": "q1", "status": "ok", "answer": "flu_a", "probabilities": {"flu_a": 0.9752, "covid": 0.0140, "unknown": 0.0107}}
+```
+
+`answer` is the chosen option key and `probabilities` holds each option's probability (rounded to four decimals here). A `status` of `ok` means the question completed normally. Probabilities are uncalibrated, so use them to compare options, not as a risk score.
+
+### Use it from Python
 
 ```python
-import sys; sys.path.insert(0, "medical-jev-4b")
+import sys
+sys.path.insert(0, "medical-jev-4b")
 from jevtrain.inference import ChoicePredictor
 
-model = ChoicePredictor("medical-jev-4b")
-print(model.predict([request]))   # request is the "request" object in the JSON above
+model = ChoicePredictor("medical-jev-4b")  # pass a path as the second argument if you already have the base model
+request = {
+    "state": {"case": "A patient has fever and cough. Influenza A PCR is positive and COVID-19 PCR is negative."},
+    "questions": {"decision": {
+        "type": "choice",
+        "instructions": "Choose the most likely diagnosis based on the test results.",
+        "criteria": {"flu_a": "Influenza A", "covid": "COVID-19", "unknown": "Insufficient evidence"},
+    }},
+}
+result = model.predict([request])[0]
+print(result["answer"], result["probabilities"])
 ```
 
-- Low VRAM: add `--batch-size 1`.
-- Base model already downloaded: pass its path with `--base-model`.
-- More than 52 options: use `scripts/predict_choices.py --tournament-above 52` from this repository. This feature is experimental.
-- The weights use a custom format. Load them with the bundled `predict_choices.py` or `ChoicePredictor`, not PEFT.
+### Troubleshooting
 
-</details>
+| Situation | What to do |
+| --- | --- |
+| Low VRAM | Add `--batch-size 1` |
+| Base model already downloaded | Add `--base-model /path/to/Qwen3.5-4B` |
+| More than 52 options | Use `scripts/predict_choices.py --tournament-above 52` from this repository (experimental) |
+| Loading with PEFT | Not supported. The weights use a custom format, so use `predict_choices.py` or `ChoicePredictor` |
 
 ## What Not to Use It For
 
@@ -212,7 +226,7 @@ Causes of the weak spots: triage was not part of training, and the training data
 
 ```bash
 pip install -e . && pip install -r requirements-train.txt
-hf download --repo-type dataset JuneYao/medical-jev-4b-data --local-dir work/data/release
+hf download --repo-type dataset JuneYao/medical-jev-data --local-dir work/data/release
 # Also generate work/benchmark/medical_decision_v1.jsonl as described in docs/EVALUATION.md
 python scripts/build_clean_data.py .
 jev train --config configs/jev/release/train.json --output runs/train
@@ -232,15 +246,19 @@ TypeSafe's JEV offers a structured judgment API: pass in context and typed quest
 
 </details>
 
-## Downloads and Docs
+## Resources
 
 | Content | Link |
 | --- | --- |
 | Model | [Hugging Face](https://huggingface.co/JuneYao/medical-jev-4b/tree/v1.2.0) |
-| Data (242,921 questions, 77 sources) | [Hugging Face](https://huggingface.co/datasets/JuneYao/medical-jev-4b-data) |
+| Data (242,921 questions, 77 sources) | [Hugging Face](https://huggingface.co/datasets/JuneYao/medical-jev-data) |
 | Benchmark | [jev-healthcare-lab](https://github.com/JuneYaooo/jev-healthcare-lab) |
 | Per-question results | [docs/results](docs/results/README.md) |
 | Detailed docs (Chinese) | [Evaluation](docs/EVALUATION.md) · [Training](docs/TRAINING.md) · [Data](docs/DATA.md) · [Input limits](docs/INPUT_LIMIT_CHECK.md) · [Model card](docs/MODEL_CARD_V1.md) · [Release report](docs/RELEASE_V1.md) · [Changelog](CHANGELOG.md) |
+
+## Community
+
+Join the discussion on [LINUX.DO](https://linux.do/). Please report bugs and feature requests in [Issues](https://github.com/JuneYaooo/medical-JEV-TRAIN/issues).
 
 ## License
 

@@ -105,7 +105,7 @@ def method_figure():
     # sampling
     s.line(bx + sw_ / 2, 450, bx + sw_ / 2, 498, arrow=True)
     box(s, bx, 500, bw, 64, ['按任务抽样', '每类 ≤3,000 题 + 通用医学 10,000 题'], fill=BLUE_PALE, stroke=BLUE)
-    s.text(x + w / 2, 592, '数据全文公开：JuneYao/medical-jev-4b-data', size=11, fill=MUTED, anchor='middle')
+    s.text(x + w / 2, 592, '数据全文公开：JuneYao/medical-jev-data', size=11, fill=MUTED, anchor='middle')
 
     # (b) training + selection
     x, w = cols[1]
