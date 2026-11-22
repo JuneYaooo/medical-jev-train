@@ -1,0 +1,137 @@
+{
+  "_note": "补充题源文件清单：构建公开数据集时加入的已核查题源，记录题数与 SHA-256，供核对来源。",
+  "files": {
+    "work/reliable_sources_round2_20261024/dataset/added_train.jsonl": {
+      "rows": 1480,
+      "sha256": "45f3bcf856c49dc96aea8c3e288c8dc883d6b8c5f3ff0c063a1774e19881bb09"
+    },
+    "work/reliable_sources_round3_20261024/dataset/added_train.jsonl": {
+      "rows": 326,
+      "sha256": "0e8dbe5b8c3d9772ff909c843d01edb86063fd5a8a88a0f2df4b03fa2f429ec3"
+    },
+    "work/reliable_sources_round4_20261024/dataset/added_train.jsonl": {
+      "rows": 170,
+      "sha256": "bbf1cf89181062b89d646429d9e4b3f3ff9f80b7810eb3f3cd3d72ab8155db11"
+    },
+    "work/reliable_sources_round5_20261024/dataset/added_train.jsonl": {
+      "rows": 131,
+      "sha256": "a2fc0a29196f63d3c8d18af541926e4032638d5a66a0ab9cc4df684b708e7c2f"
+    },
+    "work/reliable_sources_round6_20261025/dataset/added_train.jsonl": {
+      "rows": 309,
+      "sha256": "3532f6a7ebfffda24faf4fc8dea7c9281d825a136c057a65db9f5867674047e1"
+    },
+    "work/reliable_sources_round7_20261025/dataset/added_train.jsonl": {
+      "rows": 1525,
+      "sha256": "ead1a2900fffc531cc34255860f9388277821d28786c517e80f03f62a1599136"
+    },
+    "work/reliable_sources_round8_20261025/dataset/added_train.jsonl": {
+      "rows": 106,
+      "sha256": "49afaf5c2ee4a01cfca24fbdc6ef96e69830225dc9695ce22032078e23c5c79d"
+    },
+    "work/reliable_sources_round9_20261025/dataset/added_train.jsonl": {
+      "rows": 89,
+      "sha256": "1722101011ae76a61794307ab88ed69dd47a67f49222c43a0d3ede7e9bd8ea0b"
+    },
+    "work/reliable_sources_round10_20261025/dataset/added_train.jsonl": {
+      "rows": 264,
+      "sha256": "e5183f10500dcf24b90b803b60ace41eec91d539649c9609883b8e546cdb5aa4"
+    },
+    "work/reliable_sources_round11_20261025/dataset/added_train.jsonl": {
+      "rows": 161,
+      "sha256": "0b85dc2058a25abcb5515b4b11b5c8cb4dfeafd82002bcba4b9984793bcdfb88"
+    },
+    "work/reliable_sources_round12_20261025/dataset/added_train.jsonl": {
+      "rows": 237,
+      "sha256": "31bec2308b657a929ca0105c585a02517f46f8aa6e86a3de9400f017523f6c46"
+    },
+    "work/reliable_sources_round13_20261025/dataset/added_train.jsonl": {
+      "rows": 131,
+      "sha256": "dd9b424eab4e9671f89a46eca30d0cc5f8298dc3479c34835570cacdceba2366"
+    },
+    "work/reliable_sources_round27_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 151,
+      "sha256": "fcc68366cc0f41f9cc741c75d745f275681151971cce56bce8a8c5808397804e"
+    },
+    "work/reliable_sources_round28_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 38,
+      "sha256": "6c5ba3c837d63a2c7dfbc5fc3a4ef256f63dc7dac7f22a78d06a18ddf4094dc4"
+    },
+    "work/reliable_sources_round29_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 56,
+      "sha256": "92189e102e41c8f1ae65a7b07955e613a1ffa2e9aaf34c9d5758d3773fc57fef"
+    },
+    "work/reliable_sources_round30_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 46,
+      "sha256": "4d2adcc5414f1e9019d330422134d2fbc97b925fa9edf3bb30ce7eee97488e65"
+    },
+    "work/reliable_sources_round36_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 287,
+      "sha256": "2ff832c25f9b50daf0fa8b73505b5362999ff3f9d2a6e96b515a4dea50e8acc4"
+    },
+    "work/reliable_sources_round38_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 52,
+      "sha256": "f64af8bb645ea508146d9a54dc0db108684f7f89a5ab48d38aec94e86e55ac28"
+    },
+    "work/reliable_sources_round39_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 75,
+      "sha256": "42755c87cd3ea7a35e0b00a156019d231413267026d4f6c1118f52a86ed629ed"
+    },
+    "work/reliable_sources_round40_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 79,
+      "sha256": "e1abc45ce0bdc5390d84a338a3589f3bcbdaffca548724560ae4ec5469f42cc7"
+    },
+    "work/reliable_sources_round41_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 92,
+      "sha256": "e432a42e70f041e8526b542c0ddc7db3a41db67c56aa52d0b3957d73a033bfc0"
+    },
+    "work/reliable_sources_round42_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 97,
+      "sha256": "851395e730c73dea50f3f43183c1919c512ac41d54c69d5bef16d0c0292aa41f"
+    },
+    "work/reliable_sources_round46_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 167,
+      "sha256": "72dbac1e7a582a536a40243a2e54399cd784f1c975596fe4297a87ab0450c31e"
+    },
+    "work/reliable_sources_round47_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 108,
+      "sha256": "d6503b8823829227b0ae0984e28c580eb596f6a9708a29e3d2a9ef88652a0073"
+    },
+    "work/reliable_sources_round48_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 62,
+      "sha256": "e94ceb6475f0adca37b346d675e7aa2a6bcb8b3813e0ffd3442e0791a5cc5aa9"
+    },
+    "work/reliable_sources_round52_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 244,
+      "sha256": "cbd640c4439435183e1b1ae201952956738bf399f9f2d5ad04e36a5d683f0122"
+    },
+    "work/reliable_sources_round53_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 64,
+      "sha256": "5fea9cef09ec38f40a5a11572f93b3f25c69bfe5c86c934b9794eb0c3549b38c"
+    },
+    "work/reliable_sources_round59_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 171,
+      "sha256": "e96e9d10c02ec59bf7972bb55ccea4ea2ad390fcf85f9f2342a04b5f4cc54063"
+    },
+    "work/reliable_sources_round60_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 91,
+      "sha256": "37ab9a283cc8192d80ca31c9448770ad72c17782fc3ffe47e21b7c89c03c762a"
+    },
+    "work/reliable_sources_round61_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 52,
+      "sha256": "8214ef0b6e9eca687878153514d76e07ba5c0882a3189ce4939439f16d0dcda9"
+    },
+    "work/reliable_sources_round64_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 150,
+      "sha256": "fb930b25eb082e53f5354f8bd3f709ae4ffa3dbd7775afe8e5038ed4b2501564"
+    },
+    "work/reliable_sources_round65_20261025_joint/root_admission/added_dedup_filtered.jsonl": {
+      "rows": 76,
+      "sha256": "f2d8094cb6ff433a815a6b837f080572d23ac05847a7a00af68f3de1ddcefbf4"
+    },
+    "work/grounded_generation_20261024/urgency/message_urgency_pair_train.jsonl": {
+      "rows": 1024,
+      "sha256": "35d76d7c434203b419178d47301278e812b6b3b7c767b1616e4dcbd292796259"
+    }
+  }
+}

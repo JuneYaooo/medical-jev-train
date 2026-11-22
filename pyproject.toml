@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jevtrain"
+version = "0.2.0"
+description = "Medical choice-model research, training and evaluation"
+requires-python = ">=3.10"
+
+[project.scripts]
+jev = "jevtrain.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,9 @@
+torch>=2.7,<3
+transformers>=5.19,<6
+peft>=0.15,<1
+bitsandbytes>=0.45,<1
+accelerate>=1,<2
+huggingface-hub>=1,<2
+safetensors>=0.4
+numpy>=1.26
+tensorboard>=2.20,<3

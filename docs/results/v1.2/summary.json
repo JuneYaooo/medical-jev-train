@@ -1,0 +1,619 @@
+{
+ "version": "1.2.0",
+ "checkpoint_sha256": "130a4cc0dd588d09cbfce58d694589843b182b4b72e74a5648139f8e7d6e4bc3",
+ "training": {
+  "steps": 5544,
+  "new_rows": 44347,
+  "skipped_optimizer_steps": 4,
+  "elapsed_seconds": 4972.9,
+  "trainable_parameters": 32464896,
+  "selected_step": 5000,
+  "development_accuracy": 0.8093410108765196,
+  "development_macro_accuracy": 0.8101229517068207
+ },
+ "data_cleaning": {
+  "train_before": 242921,
+  "train_after": 242614,
+  "removed": 307,
+  "removed_by_reason": {
+   "exact_stem": 31,
+   "conflicting_gold": 69,
+   "near_duplicate": 238
+  },
+  "removed_by_task": {
+   "medical_exam_unmapped": 59,
+   "pgx_guideline_recommendation": 46,
+   "treatment_choice": 34,
+   "diagnosis_choice": 29,
+   "case_etiology": 22,
+   "examination_choice": 16,
+   "medication_choice": 16,
+   "case_complication": 15,
+   "patient_contraindication": 13,
+   "patient_counseling": 10,
+   "prevention_choice": 8,
+   "tcm_syndrome": 8,
+   "monitoring_target": 6,
+   "clinical_grade": 5,
+   "followup_plan": 4,
+   "infection_precaution": 4,
+   "consent_action": 3,
+   "positioning_choice": 3,
+   "fluid_plan": 3,
+   "nursing_priority": 2,
+   "nutrition_plan": 1
+  },
+  "development_before": 1566,
+  "development_after": 1563,
+  "threshold": 0.8
+ },
+ "evaluation": {
+  "benchmark_mixed": {
+   "base": {
+    "n": 1514,
+    "correct": 925,
+    "accuracy": 0.6109643328929987,
+    "accuracy_95ci": [
+     0.5858064516129032,
+     0.6359416445623343
+    ],
+    "macro_accuracy": 0.6266942625275959,
+    "supported_n": 1514,
+    "coverage": 1.0,
+    "supported_accuracy": 0.6109643328929987,
+    "unsupported": 0,
+    "nll": 1.6610693315676852,
+    "brier": 0.49965991029399126,
+    "ece": 0.10240789563051886,
+    "probability_metrics_n": 1514
+   },
+   "model": {
+    "n": 1514,
+    "correct": 1038,
+    "accuracy": 0.6856010568031704,
+    "accuracy_95ci": [
+     0.660574412532637,
+     0.709741550695825
+    ],
+    "macro_accuracy": 0.7410799351540093,
+    "supported_n": 1514,
+    "coverage": 1.0,
+    "supported_accuracy": 0.6856010568031704,
+    "unsupported": 0,
+    "nll": 1.6577445399766046,
+    "brier": 0.4677161527077227,
+    "ece": 0.14573898559390272,
+    "probability_metrics_n": 1514
+   }
+  },
+  "benchmark_direct": {
+   "base": {
+    "n": 1514,
+    "correct": 907,
+    "accuracy": 0.5990752972258917,
+    "accuracy_95ci": [
+     0.5749014454664915,
+     0.6231593038821954
+    ],
+    "macro_accuracy": 0.6200275958609291,
+    "supported_n": 1414,
+    "coverage": 0.9339498018494056,
+    "supported_accuracy": 0.6414427157001414,
+    "unsupported": 100,
+    "nll": 0.9632404155124756,
+    "brier": 0.46843551432872144,
+    "ece": 0.09554698570635396,
+    "probability_metrics_n": 1414
+   },
+   "model": {
+    "n": 1514,
+    "correct": 1011,
+    "accuracy": 0.6677675033025099,
+    "accuracy_95ci": [
+     0.6432710882163555,
+     0.6932270916334662
+    ],
+    "macro_accuracy": 0.7310799351540092,
+    "supported_n": 1414,
+    "coverage": 0.9339498018494056,
+    "supported_accuracy": 0.714992927864215,
+    "unsupported": 100,
+    "nll": 0.896439472761464,
+    "brier": 0.43393675201541054,
+    "ece": 0.13866830481245293,
+    "probability_metrics_n": 1414
+   }
+  },
+  "heldout_test": {
+   "base": {
+    "n": 1557,
+    "correct": 1175,
+    "accuracy": 0.7546563904945408,
+    "accuracy_95ci": [
+     0.7263681592039801,
+     0.7786163522012579
+    ],
+    "macro_accuracy": 0.7640611959524906,
+    "supported_n": 1555,
+    "coverage": 0.9987154784842646,
+    "supported_accuracy": 0.7556270096463023,
+    "unsupported": 2,
+    "nll": 0.6659864033126144,
+    "brier": 0.332556795714534,
+    "ece": 0.04235815798737995,
+    "probability_metrics_n": 1555
+   },
+   "model": {
+    "n": 1557,
+    "correct": 1260,
+    "accuracy": 0.8092485549132948,
+    "accuracy_95ci": [
+     0.7829360100376411,
+     0.8318002628120894
+    ],
+    "macro_accuracy": 0.8167751926585651,
+    "supported_n": 1555,
+    "coverage": 0.9987154784842646,
+    "supported_accuracy": 0.8102893890675241,
+    "unsupported": 2,
+    "nll": 0.5897254080263646,
+    "brier": 0.28845756398224676,
+    "ece": 0.08471635892460201,
+    "probability_metrics_n": 1555
+   }
+  }
+ },
+ "paired_vs_base": {
+  "benchmark_mixed": {
+   "accuracy_delta": 0.07463672391017173,
+   "group_bootstrap_95ci": [
+    0.048862115127175365,
+    0.09823182711198428
+   ],
+   "groups": 1288,
+   "wrong_to_right": 246,
+   "right_to_wrong": 133,
+   "repair_rate": 0.41765704584040747
+  },
+  "heldout_test": {
+   "accuracy_delta": 0.054592164418754016,
+   "group_bootstrap_95ci": [
+    0.03473053892215569,
+    0.07598197037990985
+   ],
+   "groups": 1446,
+   "wrong_to_right": 176,
+   "right_to_wrong": 91,
+   "repair_rate": 0.4607329842931937
+  }
+ },
+ "collapsed_tasks": {
+  "bench": {},
+  "test": {}
+ },
+ "by_task": {
+  "bench": {
+   "administration_route_choice": {
+    "n": 4,
+    "base": 2,
+    "model": 4
+   },
+   "case_complication": {
+    "n": 100,
+    "base": 77,
+    "model": 81
+   },
+   "case_etiology": {
+    "n": 100,
+    "base": 80,
+    "model": 86
+   },
+   "clinical_grade": {
+    "n": 100,
+    "base": 42,
+    "model": 62
+   },
+   "consent_action": {
+    "n": 3,
+    "base": 2,
+    "model": 3
+   },
+   "diagnosis_choice": {
+    "n": 100,
+    "base": 82,
+    "model": 85
+   },
+   "examination_choice": {
+    "n": 100,
+    "base": 81,
+    "model": 87
+   },
+   "fluid_plan": {
+    "n": 16,
+    "base": 5,
+    "model": 8
+   },
+   "followup_plan": {
+    "n": 6,
+    "base": 5,
+    "model": 6
+   },
+   "infection_precaution": {
+    "n": 5,
+    "base": 4,
+    "model": 4
+   },
+   "medication_choice": {
+    "n": 100,
+    "base": 67,
+    "model": 79
+   },
+   "message_urgency_pair": {
+    "n": 30,
+    "base": 23,
+    "model": 20
+   },
+   "monitoring_target": {
+    "n": 5,
+    "base": 4,
+    "model": 5
+   },
+   "nursing_priority": {
+    "n": 42,
+    "base": 32,
+    "model": 35
+   },
+   "nutrition_plan": {
+    "n": 11,
+    "base": 7,
+    "model": 8
+   },
+   "patient_contraindication": {
+    "n": 54,
+    "base": 36,
+    "model": 38
+   },
+   "patient_counseling": {
+    "n": 11,
+    "base": 9,
+    "model": 9
+   },
+   "pgx_guideline_recommendation": {
+    "n": 100,
+    "base": 39,
+    "model": 47
+   },
+   "positioning_choice": {
+    "n": 10,
+    "base": 5,
+    "model": 7
+   },
+   "prevention_choice": {
+    "n": 13,
+    "base": 7,
+    "model": 13
+   },
+   "rehabilitation_choice": {
+    "n": 4,
+    "base": 2,
+    "model": 2
+   },
+   "synthetic_diagnosis": {
+    "n": 100,
+    "base": 55,
+    "model": 61
+   },
+   "tcm_pathogenesis_candidate": {
+    "n": 100,
+    "base": 64,
+    "model": 74
+   },
+   "tcm_syndrome": {
+    "n": 100,
+    "base": 18,
+    "model": 27
+   },
+   "treatment_choice": {
+    "n": 100,
+    "base": 67,
+    "model": 75
+   },
+   "triage_urgency": {
+    "n": 100,
+    "base": 55,
+    "model": 51
+   },
+   "trial_referral": {
+    "n": 100,
+    "base": 55,
+    "model": 61
+   }
+  },
+  "test": {
+   "administration_route_choice": {
+    "n": 60,
+    "base": 55,
+    "model": 54
+   },
+   "case_complication": {
+    "n": 60,
+    "base": 43,
+    "model": 51
+   },
+   "case_etiology": {
+    "n": 61,
+    "base": 46,
+    "model": 50
+   },
+   "clinical_grade": {
+    "n": 60,
+    "base": 32,
+    "model": 40
+   },
+   "consent_action": {
+    "n": 55,
+    "base": 48,
+    "model": 51
+   },
+   "diagnosis_choice": {
+    "n": 58,
+    "base": 47,
+    "model": 50
+   },
+   "examination_choice": {
+    "n": 61,
+    "base": 44,
+    "model": 47
+   },
+   "fluid_plan": {
+    "n": 60,
+    "base": 38,
+    "model": 37
+   },
+   "followup_plan": {
+    "n": 59,
+    "base": 52,
+    "model": 52
+   },
+   "infection_precaution": {
+    "n": 60,
+    "base": 39,
+    "model": 44
+   },
+   "medical_exam_unmapped": {
+    "n": 64,
+    "base": 48,
+    "model": 52
+   },
+   "medication_choice": {
+    "n": 60,
+    "base": 42,
+    "model": 45
+   },
+   "message_urgency_pair": {
+    "n": 60,
+    "base": 56,
+    "model": 59
+   },
+   "monitoring_target": {
+    "n": 59,
+    "base": 43,
+    "model": 50
+   },
+   "nursing_priority": {
+    "n": 60,
+    "base": 44,
+    "model": 42
+   },
+   "nutrition_plan": {
+    "n": 57,
+    "base": 44,
+    "model": 50
+   },
+   "patient_contraindication": {
+    "n": 60,
+    "base": 45,
+    "model": 48
+   },
+   "patient_counseling": {
+    "n": 60,
+    "base": 47,
+    "model": 50
+   },
+   "pgx_guideline_recommendation": {
+    "n": 60,
+    "base": 42,
+    "model": 45
+   },
+   "positioning_choice": {
+    "n": 60,
+    "base": 43,
+    "model": 49
+   },
+   "prevention_choice": {
+    "n": 60,
+    "base": 41,
+    "model": 45
+   },
+   "rehabilitation_choice": {
+    "n": 60,
+    "base": 43,
+    "model": 41
+   },
+   "tcm_pathogenesis_candidate": {
+    "n": 60,
+    "base": 45,
+    "model": 47
+   },
+   "tcm_syndrome": {
+    "n": 60,
+    "base": 50,
+    "model": 58
+   },
+   "treatment_choice": {
+    "n": 61,
+    "base": 40,
+    "model": 43
+   },
+   "triage_urgency": {
+    "n": 2,
+    "base": 2,
+    "model": 2
+   },
+   "trial_referral": {
+    "n": 60,
+    "base": 56,
+    "model": 58
+   }
+  }
+ },
+ "triage": {
+  "first_turn": {
+   "n": 52,
+   "base": 34,
+   "model": 16
+  },
+  "later_turns": {
+   "n": 48,
+   "base": 21,
+   "model": 35
+  },
+  "model_prediction_counts": {
+   "1B_ESCALATION_URGENT_CARE": 23,
+   "1A_ESCALATION_NONURGENT_CARE": 55,
+   "0A_NO_ESCALATION_INFO_NEEDED": 6,
+   "0B_NO_ESCALATION_SELF_CARE_MONITOR": 16
+  },
+  "turn_rule_baseline_correct": 53
+ },
+ "other_domains": {
+  "domains": {
+   "mmlu/medical": {
+    "n": 1640,
+    "base": 75.06,
+    "model": 77.2,
+    "delta_95ci": [
+     0.18,
+     4.02
+    ]
+   },
+   "mmlu/adjacent": {
+    "n": 1742,
+    "base": 82.95,
+    "model": 86.28,
+    "delta_95ci": [
+     1.84,
+     4.71
+    ]
+   },
+   "mmlu/non_medical": {
+    "n": 10660,
+    "base": 68.55,
+    "model": 74.16,
+    "delta_95ci": [
+     4.87,
+     6.37
+    ]
+   },
+   "cmmlu/medical": {
+    "n": 1815,
+    "base": 72.29,
+    "model": 77.58,
+    "delta_95ci": [
+     3.42,
+     7.22
+    ]
+   },
+   "cmmlu/adjacent": {
+    "n": 835,
+    "base": 72.57,
+    "model": 78.44,
+    "delta_95ci": [
+     3.35,
+     8.62
+    ]
+   },
+   "cmmlu/non_medical": {
+    "n": 8932,
+    "base": 72.55,
+    "model": 77.81,
+    "delta_95ci": [
+     4.43,
+     6.11
+    ]
+   },
+   "all/medical": {
+    "n": 3455,
+    "base": 73.6,
+    "model": 77.4,
+    "delta_95ci": [
+     2.4,
+     5.12
+    ]
+   },
+   "all/adjacent": {
+    "n": 2577,
+    "base": 79.59,
+    "model": 83.74,
+    "delta_95ci": [
+     2.87,
+     5.47
+    ]
+   },
+   "all/non_medical": {
+    "n": 19592,
+    "base": 70.37,
+    "model": 75.82,
+    "delta_95ci": [
+     4.9,
+     6.0
+    ]
+   }
+  },
+  "subjects": 124,
+  "significantly_worse_after_fdr": 0,
+  "significantly_better_after_fdr": 18,
+  "largest_drops": [
+   {
+    "task": "cmmlu/college_actuarial_science",
+    "n": 106,
+    "base": 44.3,
+    "model": 40.6,
+    "delta": -3.8,
+    "q": 0.7605
+   },
+   {
+    "task": "mmlu/virology",
+    "n": 166,
+    "base": 55.4,
+    "model": 52.4,
+    "delta": -3.0,
+    "q": 0.6341
+   },
+   {
+    "task": "mmlu/international_law",
+    "n": 121,
+    "base": 86.0,
+    "model": 85.1,
+    "delta": -0.8,
+    "q": 1.0
+   },
+   {
+    "task": "cmmlu/high_school_chemistry",
+    "n": 132,
+    "base": 76.5,
+    "model": 75.8,
+    "delta": -0.8,
+    "q": 1.0
+   },
+   {
+    "task": "mmlu/college_biology",
+    "n": 144,
+    "base": 88.9,
+    "model": 88.2,
+    "delta": -0.7,
+    "q": 1.0
+   }
+  ]
+ }
+}

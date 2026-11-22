@@ -1,0 +1,29 @@
+{
+  "long_inputs": [
+    {
+      "tokens": 2043,
+      "answer": "label_2",
+      "correct": true,
+      "peak_gpu_gib": 8.22
+    },
+    {
+      "tokens": 4091,
+      "answer": "label_2",
+      "correct": true,
+      "peak_gpu_gib": 8.48
+    },
+    {
+      "tokens": 8187,
+      "answer": "label_2",
+      "correct": true,
+      "peak_gpu_gib": 8.99
+    }
+  ],
+  "boundary": {
+    "options": 52,
+    "tokens": 995,
+    "answer": "label_37",
+    "correct": true,
+    "probabilities": 52
+  }
+}

@@ -1,0 +1,11 @@
+# Tested together on RTX 5090 with Python 3.12 and CUDA 12.8.
+torch==2.8.0
+triton==3.4.0
+transformers==5.19.0
+tokenizers==0.23.3
+huggingface-hub==1.33.0
+flash-linear-attention==0.4.2
+fla-core==0.4.2
+causal-conv1d==1.7.0
+tensorboard==2.20.0
+bitsandbytes==0.50.2
