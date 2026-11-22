@@ -44,6 +44,6 @@ python medical-model/predict_choices.py --bundle medical-model \
 
 44,347 条训练样本，label smoothing 0.05。{{TRAINING}}完整训练数据不随模型分发。
 
-[评测报告](https://huggingface.co/{{MODEL_ID}}/blob/main/EVALUATION.md) · [文件校验值](https://huggingface.co/{{MODEL_ID}}/blob/main/manifest.json) · [源码与结果](https://github.com/JuneYaooo/medical-JEV-TRAIN)
+[评测报告](https://huggingface.co/{{MODEL_ID}}/blob/main/EVALUATION.md) · [文件校验值](https://huggingface.co/{{MODEL_ID}}/blob/main/manifest.json) · [源码与结果](https://github.com/JuneYaooo/medical-jev-train)
 
 {{LICENSING}}

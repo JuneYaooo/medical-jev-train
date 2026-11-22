@@ -1,6 +1,6 @@
 <div align="center">
 
-# medical-JEV-TRAIN
+# medical-jev-train
 
 **An unofficial, open-source medical JEV model you can run locally**
 
@@ -258,7 +258,7 @@ TypeSafe's JEV offers a structured judgment API: pass in context and typed quest
 
 ## Community
 
-Join the discussion on [LINUX.DO](https://linux.do/). Please report bugs and feature requests in [Issues](https://github.com/JuneYaooo/medical-JEV-TRAIN/issues).
+Join the discussion on [LINUX.DO](https://linux.do/). Please report bugs and feature requests in [Issues](https://github.com/JuneYaooo/medical-jev-train/issues).
 
 ## License
 

@@ -1,6 +1,6 @@
 <div align="center">
 
-# medical-JEV-TRAIN
+# medical-jev-train
 
 **非官方、开源、可本地运行的医疗版 JEV 模型**
 
@@ -258,7 +258,7 @@ TypeSafe 的 JEV 提供一种结构化判断 API：传入上下文和类型化�
 
 ## 社区
 
-欢迎到 [LINUX.DO](https://linux.do/) 交流使用体验和训练经验。Bug 和功能建议请提交 [Issues](https://github.com/JuneYaooo/medical-JEV-TRAIN/issues)。
+欢迎到 [LINUX.DO](https://linux.do/) 交流使用体验和训练经验。Bug 和功能建议请提交 [Issues](https://github.com/JuneYaooo/medical-jev-train/issues)。
 
 ## 许可
 
