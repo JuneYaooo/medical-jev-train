@@ -44,7 +44,7 @@ This repository provides the ready-to-use **medical-jev-4b** model and the full 
 | COVID-19 | 1.53% |
 | Insufficient evidence | 1.04% |
 
-The rule contains the answer, so this example only shows how the model is used. See [more examples (Chinese)](examples/README.md).
+The rule contains the answer, so this example only shows how the model is used. The probability stays near 97% mainly because training used label smoothing of 0.05. See [more examples (Chinese)](examples/README.md).
 
 ## How Good Is It
 
